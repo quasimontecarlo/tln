@@ -73,8 +73,8 @@ export const login = async (req, res) => {
 			_id: user._id,
 			username: user.username,
 			email: user.email,
-			readers: user.readers,
-			reading: user.reading,
+			//readers: user.readers,
+			//reading: user.reading,
 			picture: user.picture,
 			banner: user.banner,
 		});
@@ -97,7 +97,7 @@ export const logout = async (req, res) => {
 
 export const getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).select("-password");
+        const user = await User.findById(req.user._id).select("-password -readers -reading");
         res.status(200).json(user);
     } catch (error) {
         console.log( "erro' in getme controller", error.message );
