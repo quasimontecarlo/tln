@@ -5,6 +5,7 @@ import {v2 as cloudinary} from "cloudinary";
 
 import authRoutes from "./routes/auth.js"
 import userRoutes from "./routes/user.js"
+import pageRoutes from "./routes/page.js"
 
 import connectMongoDB from "./db/connectMongoDB.js";
 
@@ -24,6 +25,9 @@ app.use(express.urlencoded({ extended: true})); // middleware to prse form data
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/pages", pageRoutes);
+
+
 
 app.listen(PORT, () => {
     console.log(`server is running on port ${PORT}`);
