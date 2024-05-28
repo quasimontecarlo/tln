@@ -6,7 +6,7 @@ import User from "../models/user.js";
 export const getUserProfile = async (req, res) => {
     const { username } = req.params;
     try {
-        const user = await User.findOne({username}).select("-password -readers -reading");
+        const user = await User.findOne({username}).select("-password -readers -reading -email");
         if (!user) {
             return res.status(404).json({error: "user not found"});
         }
