@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import Page from "../models/page.js";
 import {v2 as cloudinary } from "cloudinary";
 
+
 export const writePage = async (req, res) => {
     try {
         const { text } = req.body;
@@ -171,10 +172,61 @@ export const getMyPages = async (req, res) => {
     }
 };
 
-export const getRandomPages = async (req, res, getAllPages) => {
+export const getRandomPages = async (req, res) => {
     try {
-        
-    } catch(error) {
+        const many = 4;
+        const pages = await Page.find({latest: true}).sort({ createAt: -1 }).populate({
+            path: "user",
+            select: "-password -readers -reading -email -createdAt -updatedAt"
+        });
 
+        if(pages.length === 0) {
+            return res.status(200).json([])
+        }
+
+        const shuffle = [...pages].sort(() => 0.5 - Math.random());
+        const randomPages = shuffle.slice(0, many);
+
+        res.status(200).json(randomPages);
+    } catch(error) {
+        console.log("error in getting random pages controller: ", error);
+        res.status(500).json({ error: "internal server error" });
     }
-}
+};
+
+export const getReadingPages = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+        if(!user) return res.status(404).json({ error: "user not found"});
+
+        const reading = user.reading;
+        const readingPages = await Page.find({ user: { $in: reading }, latest: true}).sort({ createdAt: -1 }).populate({
+            path: "user",
+            select: "-password -readers -reading -email -createdAt -updatedAt"
+        });
+        res.status(200).json(readingPages);
+    } catch(error) {
+        console.log("error in getting the reading pages controller: ", error);
+        res.status(500).json({  error: "internal server error"});
+    }
+};
+
+export const getUserPages = async (req, res) => {
+    try {
+        const { username } = req.params;
+        const user = await User.findOne({ username });
+        if(!user) return res.status(404).json({ error: "user not found" });
+        const pages = await Page.find({ user: user._id, latest: true }).sort({ createdAt: -1}).populate({
+            path: "user",
+            select: "-password -readers -reading -email -createdAt -updatedAt"
+        });
+        if(pages.length === 0) {
+            return res.status(200).json([])
+        }
+        res.status(200).json(pages);
+    } catch(error) {
+        console.log("error in finding user pages controller: ", error);
+        res.status(500).json({ error: "internal server error" });
+    }
+};
