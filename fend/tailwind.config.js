@@ -1,3 +1,5 @@
+/** @type {import('tailwindcss').Config} */
+
 // color-schema definition //
 // darks
 const db100 = "#2e3440"; //blue//
@@ -26,16 +28,21 @@ const pp = "#b48ead"; //pastel pink//
 const dr = "#78575b"; //dark red//
 const dg = "#556968"; //dark greeny//
 
-/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      "sans": ["ui-sans-serif", "system-ui", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+      "serif": ["ui-serif", "Georgia", "Cambria", "Times New Roman", "Times", "serif"],
+      "mono": ["monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "ui-monospace"],
+    },
     extend: {},
   },
-  plugins: [require("daisyui")],
+
+  plugins: [require("@tailwindcss/typography"), require("daisyui")],
 
   daisyui: {
     themes: [
