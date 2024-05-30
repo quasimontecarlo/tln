@@ -15,19 +15,19 @@ const HomePage = () => {
 						className={
 							"flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
 						}
-						onClick={() => setFeedType("forYou")}
+						onClick={() => setFeedType("random")}
 					>
-						For you
-						{feedType === "forYou" && (
+						random
+						{feedType === "random" && (
 							<div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
 						)}
 					</div>
 					<div
 						className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-						onClick={() => setFeedType("following")}
+						onClick={() => setFeedType("reading")}
 					>
-						Following
-						{feedType === "following" && (
+						reading
+						{feedType === "reading" && (
 							<div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
 						)}
 					</div>
@@ -37,7 +37,7 @@ const HomePage = () => {
 				<WritePage />
 
 				{/* POSTS */}
-				<Pages />
+				<Pages feedType={feedType}/>
 			</div>
 		</>
 	);

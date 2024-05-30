@@ -67,7 +67,7 @@ const Page = ({ post }) => {
 							>
 								<FaRegComment className='w-4 h-4  text-slate-500 group-hover:text-sky-400' />
 								<span className='text-sm text-slate-500 group-hover:text-sky-400'>
-									{post.comments.length}
+									{"post.comments.length"}
 								</span>
 							</div>
 							{/* We're using Modal Component from DaisyUI */}
@@ -75,31 +75,12 @@ const Page = ({ post }) => {
 								<div className='modal-box rounded border border-gray-600'>
 									<h3 className='font-bold text-lg mb-4'>COMMENTS</h3>
 									<div className='flex flex-col gap-3 max-h-60 overflow-auto'>
-										{post.comments.length === 0 && (
+										{"post.comments.length" === 0 && (
 											<p className='text-sm text-slate-500'>
 												No comments yet 🤔 Be the first one 😉
 											</p>
 										)}
-										{post.comments.map((comment) => (
-											<div key={comment._id} className='flex gap-2 items-start'>
-												<div className='avatar'>
-													<div className='w-8 rounded-full'>
-														<img
-															src={comment.user.profileImg || "/avatar-placeholder.png"}
-														/>
-													</div>
-												</div>
-												<div className='flex flex-col'>
-													<div className='flex items-center gap-1'>
-														<span className='font-bold'>{comment.user.fullName}</span>
-														<span className='text-gray-700 text-sm'>
-															@{comment.user.username}
-														</span>
-													</div>
-													<div className='text-sm'>{comment.text}</div>
-												</div>
-											</div>
-										))}
+
 									</div>
 									<form
 										className='flex gap-2 items-center mt-4 border-t border-gray-600 pt-2'
@@ -139,7 +120,7 @@ const Page = ({ post }) => {
 										isLiked ? "text-pink-500" : ""
 									}`}
 								>
-									{post.likes.length}
+									{"post.likes.length"}
 								</span>
 							</div>
 						</div>
