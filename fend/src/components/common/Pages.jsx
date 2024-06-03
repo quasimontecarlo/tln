@@ -3,16 +3,18 @@ import PageSkeleton from "../skeletons/PageSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-const Pages = ({ feedType }) => {
+const Pages = ({ feedType, username }) => {
 
 	const getPageEndpoint = () => {
-		switch(feedType) {
+		switch (feedType) {
 			case "random":
-				return "api/pages/random";
+				return "/api/pages/random";
 			case "reading":
-				return "api/pages/reading";
+				return "/api/pages/reading";
+			case "mine":
+				return `/api/pages/user/${username}`;
 			default:
-				return "api/pages/random";
+				return "/api/pages/random";
 		}
 	};
 
@@ -22,9 +24,10 @@ const Pages = ({ feedType }) => {
 		queryKey: ["pages"],
 		queryFn: async () => {
 			try {
+				
 				const res = await fetch(PAGES_ENDPOINT);
 				const data = await res.json();
-
+				console.log(res);
 				if(!res.ok) {
 					throw new Error(data.error || "something went wrong");
 				}
@@ -37,10 +40,11 @@ const Pages = ({ feedType }) => {
 
 	useEffect(() => {
 		refetch();
-	}, [feedType, refetch]);
+	}, [feedType, refetch, username]);
 
 	
 	return (
+
 		<>
 			{(isLoading || isRefetching) && (
 				<div className='flex flex-col justify-center'>
@@ -52,8 +56,8 @@ const Pages = ({ feedType }) => {
 			{!isLoading && !isRefetching && pages?.length === 0 && <p className='text-center my-4'>No posts in this tab. Switch 👻</p>}
 			{!isLoading && !isRefetching && pages && (
 				<div>
-					{pages.map((post) => (
-						<Page key={post._id} post={post} />
+					{pages.map((page) => (
+						<Page key={page._id} page={page} />
 					))}
 				</div>
 			)}

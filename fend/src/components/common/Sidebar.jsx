@@ -79,13 +79,13 @@ const Sidebar = () => {
 					>
 						<div className="avatar hidden md:inline-flex">
 							<div className="w-8 rounded-full">
-								<img src={data?.profileImg || "/avatar-placeholder.png"} />
+								<img src={data?.picture || "/avatar-placeholder.png"} />
 							</div>
 						</div>
 						<div className="flex justify-between flex-1">
 							<div className="hidden md:block">
-								<p className="text-white font-bold text-sm w-20 truncate">{data?.fullName}</p>
-								<p className="text-slate-500 text-sm">@{data?.username}</p>
+								<p className="text-white font-bold text-sm w-20 truncate">{data?.username}</p>
+								{/*<p className="text-slate-500 text-sm">@{data?.username}</p>*/}
 							</div>
 							<BiLogOut
 							className='w-5 h-5 cursor-pointer'

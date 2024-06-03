@@ -6,7 +6,7 @@ import User from "../models/user.js";
 export const getUserProfile = async (req, res) => {
     const { username } = req.params;
     try {
-        const user = await User.findOne({username}).select("-password -readers -reading -email");
+        const user = await User.findOne({username}).select("-password -reading -readers -email");
         if (!user) {
             return res.status(404).json({error: "user not found"});
         }
@@ -73,21 +73,23 @@ export const updateUser = async (req, res) => {
             user.password = await bcrypt.hash(newPassword, salt);
         }
 
-        if(picture) {
-            if(user.picture){
-                await cloudinary.uploader.destroy(user.picture.split("/").pop().split(".")[0]);
-            }
-            const uploadedResponse = await cloudinary.uploader.upload(picture);
-            picture = uploadedResponse.secure_url; 
-        }
+		if (picture) {
+			if (user.picture) {
+				await cloudinary.uploader.destroy(user.picture.split("/").pop().split(".")[0]);
+			}
 
-        if(banner) {
-            if(user.banner){
-                await cloudinary.uploader.destroy(user.banner.split("/").pop().split(".")[0]);
-            }
-            const uploadedResponse = await cloudinary.uploader.upload(banner);
-            banner = uploadedResponse.secure_url;
-        }
+			const uploadedResponse = await cloudinary.uploader.upload(picture);
+			picture = uploadedResponse.secure_url;
+		}
+
+		if (banner) {
+			if (user.banner) {
+				await cloudinary.uploader.destroy(user.banner.split("/").pop().split(".")[0]);
+			}
+
+			const uploadedResponse = await cloudinary.uploader.upload(banner);
+			banner = uploadedResponse.secure_url;
+		}
 
         user.username = username || user.username;
         user.email = email || user.email;

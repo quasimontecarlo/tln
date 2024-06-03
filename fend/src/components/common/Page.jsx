@@ -9,18 +9,21 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
+import { formatPostDate } from "../../utils/date";
 
-const Page = ({ post }) => {
-	const [comment, setComment] = useState("");
+const Page = ({ page }) => {
+	//const [comment, setComment] = useState("");
 	const {data: authUser} = useQuery({queryKey: ["authUser"]});
 	const queryClient = useQueryClient();
+	const pageOwner = page.user;
+	const isMyPage = authUser._id === page.user._id;
+	const formattedDate = formatPostDate(page.createdAt);
+	//const isLiked = false;
 	
-	const postOwner = post.user;
-	const isLiked = false;
-	const {mutate:deletePage, isPending} = useMutation({
+	const {mutate:deletePage, isPending: isDeleting} = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await fetch(`/api/pages/${post._id}`,{
+				const res = await fetch(`/api/pages/${page._id}`,{
 					method: "DELETE",
 				})
 				const data = await res.json();
@@ -39,60 +42,59 @@ const Page = ({ post }) => {
 		},
 	})
 
-	const isMyPage = authUser._id === post.user._id;
 
-	const formattedDate = "1h";
-
-	const isCommenting = false;
+	//const isCommenting = false;
 
 	const handleDeletePage = () => {
 		deletePage();
 	};
 
-	const handlePostComment = (e) => {
-		e.preventDefault();
-	};
+	//const handlePostComment = (e) => {
+	//	e.preventDefault();
+	//};
 
-	const handleLikePost = () => {};
+	//const handleLikePost = () => {};
 
 	return (
 		<>
 			<div className='flex gap-2 items-start p-4 border-b border-gray-700'>
 				<div className='avatar'>
-					<Link to={`/profile/${postOwner.username}`} className='w-8 rounded-full overflow-hidden'>
-						<img src={postOwner.profileImg || "/avatar-placeholder.png"} />
+					<Link to={`/profile/${pageOwner.username}`} className='w-8 rounded-full overflow-hidden'>
+						<img src={pageOwner.picture || "/avatar-placeholder.png"} />
 					</Link>
 				</div>
 				<div className='flex flex-col flex-1'>
 					<div className='flex gap-2 items-center'>
-						<Link to={`/profile/${postOwner.username}`} className='font-bold'>
-							{postOwner.fullName}
+						<Link to={`/profile/${pageOwner.username}`} className='font-bold'>
+							{pageOwner.username}
 						</Link>
 						<span className='text-gray-700 flex gap-1 text-sm'>
-							<Link to={`/profile/${postOwner.username}`}>@{postOwner.username}</Link>
-							<span>·</span>
+							{/*<Link to={`/profile/${postOwner.username}`}>{postOwner.about}</Link>*/}
+							<span>!=!</span>
 							<span>{formattedDate}</span>
 						</span>
 						{isMyPage && (
 							<span className='flex justify-end flex-1'>
-								{!isPending && (
+								{!isDeleting && (
 									<FaTrash className='cursor-pointer hover:text-red-500' onClick={handleDeletePage} />
 								)}
 
-								{isPending && <LoadingSpinner size='sm' />}
+								{isDeleting && <LoadingSpinner size='sm' />}
 							</span>
 						)}
 					</div>
 					<div className='flex flex-col gap-3 overflow-hidden'>
-						<span>{post.text}</span>
-						{post.img && (
+						<p></p>
+						<span>{page.text}</span>
+						{/*post.img && (
 							<img
 								src={post.img}
 								className='h-80 object-contain rounded-lg border border-gray-700'
 								alt=''
 							/>
-						)}
+						)*/}
 					</div>
+					{/*
 					<div className='flex justify-between mt-3'>
 						<div className='flex gap-4 items-center w-2/3 justify-between'>
 							<div
@@ -104,7 +106,7 @@ const Page = ({ post }) => {
 									{"post.comments.length"}
 								</span>
 							</div>
-							{/* We're using Modal Component from DaisyUI */}
+							{ We're using Modal Component from DaisyUI }
 							<dialog id={`comments_modal${post._id}`} className='modal border-none outline-none'>
 								<div className='modal-box rounded border border-gray-600'>
 									<h3 className='font-bold text-lg mb-4'>COMMENTS</h3>
@@ -162,6 +164,7 @@ const Page = ({ post }) => {
 							<FaRegBookmark className='w-4 h-4 text-slate-500 cursor-pointer' />
 						</div>
 					</div>
+					*/}
 				</div>
 			</div>
 		</>
