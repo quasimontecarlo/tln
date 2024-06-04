@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date";
+import Content from "./ReadMore";
 
 const Page = ({ page }) => {
 	//const [comment, setComment] = useState("");
@@ -85,7 +86,9 @@ const Page = ({ page }) => {
 					</div>
 					<div className='flex flex-col gap-3 overflow-hidden'>
 						<p></p>
-						<span>{page.text}</span>
+						<span>
+							<Content text={page.text} />
+						</span>
 						{/*post.img && (
 							<img
 								src={post.img}

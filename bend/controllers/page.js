@@ -175,11 +175,11 @@ export const getMyPages = async (req, res) => {
 export const getRandomPages = async (req, res) => {
     try {
         const many = 4;
-        const pages = await Page.find({latest: true}).sort({ createAt: -1 }).populate({
+        const userId = req.user.id;
+        const pages = await Page.find({latest: true, user:{$ne: userId}}).sort({ createAt: -1 }).populate({
             path: "user",
             select: "-password -readers -reading -email -createdAt -updatedAt"
         });
-
         if(pages.length === 0) {
             return res.status(200).json([])
         }
