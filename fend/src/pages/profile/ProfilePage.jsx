@@ -11,11 +11,12 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/date";
 
 import readUser from "../../hooks/readUser";
-import toast from "react-hot-toast";
+import useUpdateUserProfile from "../../hooks/useUpdateProfile";
+import { set } from "mongoose";
 
 const ProfilePage = () => {
 
@@ -29,7 +30,6 @@ const ProfilePage = () => {
 	const { username } = useParams();
 
 	const { read, isPending } = readUser();
-	const queryClient = useQueryClient();
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
 	const {data: user, isLoading, refetch, isRefetching} = useQuery({
@@ -48,41 +48,7 @@ const ProfilePage = () => {
 		},
 	});
 
-	const { mutate: updateProfile, isPending: isUpdatingProfile } = useMutation({
-		mutationFn: async () => {
-			try {
-				const res = await fetch(`/api/users/update`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						banner,
-						picture,
-					}),
-				});
-				const data = await res.json();
-				if (!res.ok) {
-					throw new Error(data.error || "Something went wrong");
-				}
-				return data;
-			} catch (error) {
-				throw new Error(error.message);
-			}
-		},
-		onSuccess: () => {
-			toast.success("Profile updated successfully");
-			Promise.all([
-				queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-				queryClient.invalidateQueries({ queryKey: ["userProfile"] }),
-				queryClient.invalidateQueries({ queryKey: ["pages"] }),
-			]);
-		},
-		onError: (error) => {
-			toast.error(error.message);
-		},
-	});
-
+const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 
 	const isMyProfile = authUser._id === user?._id;
 	const memberSinceDate = formatMemberSinceDate(user?.createdAt);
@@ -104,6 +70,19 @@ const ProfilePage = () => {
 		refetch();
 	}, [username, refetch])
 
+	function formatUrl(url) {
+		if(!url.includes("http://") && !url.includes("https://")) {
+			if (!url.includes("www.")){
+                return `https://www.${url}`;
+				
+			} else {
+				return `https://${url}`;
+			}
+		} else {
+			return url;
+		}
+	};
+
 	return (
 		<>
 			<div className='flex-[4_4_0]  border-r border-gray-700 min-h-screen '>
@@ -119,7 +98,7 @@ const ProfilePage = () => {
 								</Link>
 								<div className='flex flex-col'>
 									<p className='font-bold text-lg'>{user?.fullName}</p>
-									<span className='text-sm text-slate-500'>{POSTS?.length} posts</span>
+									<span className='text-sm text-slate-500'>- · - · - · -</span>
 								</div>
 							</div>
 							{/* COVER IMG */}
@@ -168,7 +147,7 @@ const ProfilePage = () => {
 								</div>
 							</div>
 							<div className='flex justify-end px-4 mt-5'>
-								{isMyProfile && <EditProfileModal />}
+								{isMyProfile && <EditProfileModal authUser= { authUser }/>}
 								{!isMyProfile && (
 									<button
 										className='btn btn-outline rounded-full btn-sm'
@@ -182,7 +161,11 @@ const ProfilePage = () => {
 								{(banner || picture) && (
 									<button
 										className='btn btn-primary rounded-full btn-sm text-white px-4 ml-2'
-										onClick={() => updateProfile()}
+										onClick={ async () => {
+											await updateProfile({ banner, picture });
+											setProfileImg(null);
+											setCoverImg(null);
+										}}
 									>
 										{isUpdatingProfile ? "updating..." : "update"}
 									</button>
@@ -191,9 +174,8 @@ const ProfilePage = () => {
 
 							<div className='flex flex-col gap-4 mt-14 px-4'>
 								<div className='flex flex-col'>
-									<span className='font-bold text-lg'>{user?.fullName}</span>
 									<span className='text-sm text-slate-500'>@{user?.username}</span>
-									<span className='text-sm my-1'>{user?.bio}</span>
+									<span className='text-sm my-1'>{user?.about}</span>
 								</div>
 
 								<div className='flex gap-2 flex-wrap'>
@@ -202,12 +184,12 @@ const ProfilePage = () => {
 											<>
 												<FaLink className='w-3 h-3 text-slate-500' />
 												<a
-													href='https://youtube.com/@asaprogrammer_'
+													href={formatUrl(user?.link)}
 													target='_blank'
 													rel='noreferrer'
 													className='text-sm text-blue-500 hover:underline'
 												>
-													youtube.com/@asaprogrammer_
+													{user?.link}
 												</a>
 											</>
 										</div>
