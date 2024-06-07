@@ -4,6 +4,7 @@ import LoginPage from "./pages/auth/login/LoginPage";
 import SignupPage from "./pages/auth/signup/SignupPage";
 import Sidebar from "./components/common/Sidebar";
 import ProfilePage from "./pages/profile/ProfilePage";
+import WritePage from "./pages/home/WritePage";
 import LoadingSpinner from "./components/common/LoadingSpinner";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -45,6 +46,7 @@ function App() {
 				<Route path="/signup" element={!authUser ? <SignupPage /> :<Navigate to="/" />} />
 				<Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
 				<Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
+				<Route path="/write" element={authUser ? <WritePage /> : <Navigate to="login" />} />
 			</Routes>
 			<Toaster />
 		</div>

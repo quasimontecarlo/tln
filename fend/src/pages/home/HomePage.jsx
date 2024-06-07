@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import Pages from "../../components/common/Pages";
-import WritePage from "./WritePage";
 
 const HomePage = () => {
 	const [feedType, setFeedType] = useState("random");
@@ -32,9 +31,6 @@ const HomePage = () => {
 						)}
 					</div>
 				</div>
-
-				{/*  CREATE POST INPUT */}
-				<WritePage />
 
 				{/* POSTS */}
 				<Pages feedType={feedType}/>
