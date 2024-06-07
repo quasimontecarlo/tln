@@ -200,6 +200,8 @@ export const getRandomPages = async (req, res) => {
 
 export const getReadingPages = async (req, res) => {
     try {
+        let i = req.query.index ? Number(req.query.index) : 0;// starts form 0
+        const many = 10;
         const userId = req.user._id;
         const user = await User.findById(userId);
         if(!user) return res.status(404).json({ error: "user not found"});
@@ -208,7 +210,7 @@ export const getReadingPages = async (req, res) => {
         const readingPages = await Page.find({ user: { $in: reading }, latest: true}).sort({ createdAt: -1 }).populate({
             path: "user",
             select: "-password -readers -reading -email -createdAt -updatedAt"
-        });
+        }).lean().limit(many).skip(i * many);
         res.status(200).json(readingPages);
     } catch(error) {
         console.log("error in getting the reading pages controller: ", error);

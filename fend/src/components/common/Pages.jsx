@@ -14,7 +14,7 @@ const Pages = ({ feedType, username }) => {
 			case "random":
 				return `/api/pages/random?index=${index}`;
 			case "reading":
-				return "/api/pages/reading";
+				return `/api/pages/reading?index=${index}`;
 			case "mine":
 				return `/api/pages/user/${username}?index=${index}`;
 			default:

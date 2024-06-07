@@ -1,9 +1,5 @@
-import { FaRegComment } from "react-icons/fa";
-import { BiRepost } from "react-icons/bi";
-import { FaRegHeart } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa6";
+
 import { FaTrash } from "react-icons/fa";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
@@ -58,7 +54,7 @@ const Page = ({ page }) => {
 
 	return (
 		<>
-			<div className='flex gap-2 items-start p-4 border-b border-gray-700'>
+			<div className='flex gap-2 items-start p-4 border-b border-gray-700 hero-pattern'>
 				<div className='avatar'>
 					<Link to={`/profile/${pageOwner.username}`} className='w-8 rounded-full overflow-hidden'>
 						<img src={pageOwner.picture || "/avatar-placeholder.png"} />
