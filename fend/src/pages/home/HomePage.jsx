@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Pages from "../../components/common/Pages";
 import WritePage from "./WritePage";
 
 const HomePage = () => {
-	const [feedType, setFeedType] = useState("forYou");
-
+	const [feedType, setFeedType] = useState("random");
+	
 	return (
 		<>
 			<div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
