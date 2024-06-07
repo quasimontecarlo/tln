@@ -1,13 +1,13 @@
 import Page from "./Page";
 import PageSkeleton from "../skeletons/PageSkeleton";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useRef } from "react";
 
 const Pages = ({ feedType, username }) => {
 
 	const [ items, setItems ] = useState([]);
 	const [ index, setIndex ] = useState(0);
-	const queryClient = useQueryClient();
+
 
 	const getPageEndpoint = () => {
 		switch (feedType) {
@@ -48,6 +48,15 @@ const Pages = ({ feedType, username }) => {
 		}
 	});
 
+	const appendPages = async () => {
+		const res = await fetch(PAGES_ENDPOINT);
+		const temp = [...items];
+		const updatedData = await res.json();
+		const appended = temp.concat(updatedData);
+		setItems(appended);
+		setIndex( prevIndex => prevIndex + 1);
+	}
+
 	//useEffect(() => {
 	//	refetch();
 	//}, [feedType, refetch, username);
@@ -57,24 +66,19 @@ const Pages = ({ feedType, username }) => {
 	useEffect(() => {
 	  const observer = new IntersectionObserver(
 		entries => {
-			console.log(entries[0]);
 		  	if (entries[0].isIntersecting) {
-				if (data.length > 0){
-					refetch();
-				}
+				appendPages();
 		  	}
 		},
 		{ threshold: 1 }
 	  );
 	
 	  if (observerTarget.current) {
-		console.log("here");
 		observer.observe(observerTarget.current);
 	  }
 	
 	  return () => {
 		if (observerTarget.current) { 
-			console.log("there");
 		  	observer.unobserve(observerTarget.current);
 		}
 	  };
@@ -99,9 +103,7 @@ const Pages = ({ feedType, username }) => {
 							<Page key={item._id} page={item} />
 						))}
 					</ul>
-					{data?.length === 10 && (
-						<div ref={observerTarget}></div>
-					)}
+					<div ref={observerTarget}></div>
 				</div>
 			)}
 		</>
