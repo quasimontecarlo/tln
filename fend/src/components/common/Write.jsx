@@ -43,7 +43,7 @@ const Write = () => {
 	};
 
 	return (
-		<div className="flex p-4 items-start gap-4 border-b border-gray-700 h-full">
+		<div className="flex p-4 items-start gap-4 border-b border-gray-700">
 			<div className="avatar">
 				<div className="w-8 rounded-full">
 					<img src={authUser.picture || "/avatar-placeholder.png"} />
@@ -51,12 +51,12 @@ const Write = () => {
 			</div>
 			<form className="flex flex-col gap-2 h-full w-full" onSubmit={handleSubmit}>
 				<textarea
-					className="textarea w-full h-full p-0 text-lg resize-none border-none focus:outline-none  border-gray-800"
+			className="textarea bg-hero-pattern bg-[length:58px_58px] w-full h-[calc(100vh-154px)] p-0 text-lg resize-none border-none focus:outline-none"
 					placeholder="tell me something..."
 					value={text}
 					onChange={(e) => setText(e.target.value)}
 				/>
-				<div className="flex justify-end border-t py-2 border-t-gray-700">
+				<div className="flex justify-end border-t py-2 border-primary">
 					<button className="btn btn-primary rounded-full btn-sm text-white px-4">
 						{isPending ? "writing..." : "write"}
 					</button>

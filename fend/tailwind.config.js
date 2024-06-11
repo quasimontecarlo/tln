@@ -39,7 +39,11 @@ export default {
       "serif": ["ui-serif", "Georgia", "Cambria", "Times New Roman", "Times", "serif"],
       "mono": ["monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "ui-monospace"],
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "hero-pattern": "linear-gradient(0deg, #3b4252 1.79%, #2e3440 1.79%, #2e3440 50%, #3b4252 50%, #3b4252 51.79%, #2e3440 51.79%, #2e3440 100%)",
+      }
+    },
   },
 
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
@@ -72,10 +76,11 @@ export default {
           "--rounded-badge": "1.9rem", // border radius rounded-badge utility class, used in badges and similar
           "--animation-btn": "0.25s", // duration of animation when you click on button
           "--animation-input": "0.2s", // duration of animation for inputs like checkbox, toggle, radio, etc
-          "--btn-focus-scale": "0.95", // scale transform of button when you focus on it
+          "--btn-focus-scale": "0.98", // scale transform of button when you focus on it
           "--border-btn": "1px", // border width of buttons
           "--tab-border": "1px", // border width of tabs
           "--tab-radius": "0.5rem", // border radius of tabs
+
         },
       },
       "nord",

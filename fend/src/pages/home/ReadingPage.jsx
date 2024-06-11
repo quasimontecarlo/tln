@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import Pages from "../../components/common/Pages";
 
-const HomePage = () => {
-	const [feedType, setFeedType] = useState("random");
+const ReadingPage = () => {
+	const [feedType, setFeedType] = useState("reading");
 	
 	return (
 		<>
@@ -15,4 +15,4 @@ const HomePage = () => {
 		</>
 	);
 };
-export default HomePage;
+export default ReadingPage;

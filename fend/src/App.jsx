@@ -6,9 +6,11 @@ import Sidebar from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
 import ProfilePage from "./pages/profile/ProfilePage";
 import WritePage from "./pages/home/WritePage";
+import ReadingPage from "./pages/home/ReadingPage";
 import LoadingSpinner from "./components/common/LoadingSpinner";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
+
 
 function App() {
 	const { data:authUser, isLoading, error, isError } = useQuery({
@@ -49,7 +51,8 @@ function App() {
 					<Route path="/signup" element={!authUser ? <SignupPage /> :<Navigate to="/" />} />
 					<Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
 					<Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
-					<Route path="/write" element={authUser ? <WritePage /> : <Navigate to="login" />} />
+					<Route path="/write" element={authUser ? <WritePage /> : <Navigate to="/login" />} />
+					<Route path="/reading" element={authUser ? <ReadingPage /> : <Navigate to="/login" />} />
 				</Routes>
 				<Toaster />
 			</div>

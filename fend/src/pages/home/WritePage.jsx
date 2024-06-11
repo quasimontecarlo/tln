@@ -4,7 +4,7 @@ const WritePage = () => {
 	
 	return (
 		<>
-			<div className="flex-[4_4_0] mr-auto border-r border-gray-700 h-screen">
+			<div className="flex-[4_4_0]">
 
 				{/*  CREATE PAGE INPUT */}
 				<Write />
