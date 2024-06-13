@@ -11,10 +11,10 @@ const ReadMore = ({ children }) => {
             {isReadMore ? text.slice(0, 500) : text}
             <span
                 onClick={toggleReadMore}
-                className="read-or-hide text-accent"
+                className="read-or-hide text-secondary"
                 //style={{ color: "green" }}
             >
-                {text.length > 500 && isReadMore ? "...read more" : ""}
+                {text.length > 500 && isReadMore ? " ...read more" : ""}
             </span>
         </p>
     );

@@ -3,6 +3,7 @@ import { BiLogOut } from "react-icons/bi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import classNames from "./classNames";
+import { isMobile } from "react-device-detect";
 
 
 const Navbar = () => {
@@ -48,24 +49,24 @@ const Navbar = () => {
     const reading = "/reading";
 
 	return (
-		<div className="navbar bg-base-100 flex max-w-6xl mx-auto p-0">
+		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed", isMobile && "bottom-0" || "top-0")}>
             <div className="flex-1 justify-start btn btn-ghost hover:bg-base-100">
                 <Link to={`/`} className="text-xl">
                     thelonelynetwork
                 </Link>
             </div>
             <div role="tablist" className="flex-1 tabs tabs-bordered">
-                <Link to={home}
-                role="tab"
-                className={classNames("tab", isMatchingLocation(home) && "tab-active")}
-                >
-                    discovery
-                </Link>
                 <Link to={write}
                 role="tab"
                 className={classNames("tab", isMatchingLocation(write) && "tab-active")}
                 >
                     write
+                </Link>
+                <Link to={home}
+                role="tab"
+                className={classNames("tab", isMatchingLocation(home) && "tab-active")}
+                >
+                    discovery
                 </Link>
                 <Link to={reading}
                 role="tab"
@@ -75,14 +76,14 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            <div className="flex-1 justify-end mr-auto">
+            <div className="flex-1 justify-end me-0">
                 {data && (
 					<Link
 						to={`/profile/${data.username}`}
 						className="mt-auto mb-auto flex transition-all duration-100 rounded-full"
 					>
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-square avatar hover:bg-base-100">
-                            <div className="w-8 rounded-full">
+                            <div className="w-8 rounded-md">
                                 <img src={data?.picture || "/avatar-placeholder.png"} />
                             </div>
                         </div>
@@ -90,13 +91,16 @@ const Navbar = () => {
                     )}
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} className="flex">
-                        <button className="btn btn-ghost hover:bg-base-100 justify-end ps-1 pe-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-                        </button>
+                        <button className="btn btn-ghost hover:bg-base-100 justify-end ps-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                            </svg>
+                      </button>
                     </div>
                     <ul tabIndex={0} className="z-[1] shadow-l menu items-end menu-sm dropdown-content w-auto">
                         {/*<li><a>Settings</a></li>*/}
                         <li><a
+                        className="hover:bg-base-100"
                         onClick={(e) => {
                         e.preventDefault();
                         logout();

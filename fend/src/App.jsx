@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/auth/login/LoginPage";
 import SignupPage from "./pages/auth/signup/SignupPage";
-import Sidebar from "./components/common/Sidebar";
 import Navbar from "./components/common/Navbar";
 import ProfilePage from "./pages/profile/ProfilePage";
 import WritePage from "./pages/home/WritePage";
@@ -42,7 +41,7 @@ function App() {
 	}
 
 	return (
-		<div className="justify-center items-center">
+		<div className="max-w-6xl mx-auto justify-center items-center">
 			{authUser && <Navbar />}
 			<div className="flex max-w-6xl mx-auto">
 
