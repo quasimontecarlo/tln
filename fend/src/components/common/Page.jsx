@@ -53,7 +53,7 @@ const Page = ({ page, dotted }) => {
 	//const handleLikePost = () => {};
 
 	return (
-			<div className={classNames("flex gap-2 items-start p-4 border-b border-secondary border-dashed", dotted && "bg-page-pattern bg-[length:8.49px_8.49px] border-x")}>
+			<div className={classNames("flex gap-2 items-start p-4 ", dotted && "bg-page-pattern bg-[length:8.49px_8.49px]")}>
 				<div className="flex">
 					<Link to={`/profile/${pageOwner.username}`} className="w-8 rounded-md overflow-hidden">
 						<img src={pageOwner.picture || "/avatar-placeholder.png"} />
@@ -61,7 +61,7 @@ const Page = ({ page, dotted }) => {
 				</div>
 				<div className="flex flex-col flex-1 mt-0.5">
 					<div className="flex gap-2 items-center">
-						<Link to={`/profile/${pageOwner.username}`} className="font-bold">
+						<Link to={`/profile/${pageOwner.username}`} className="font-m1m_bold">
 							{pageOwner.username}
 						</Link>
 						<span className="text-primary flex gap-1 text-sm">

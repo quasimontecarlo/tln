@@ -80,7 +80,8 @@ const Pages = ({ feedType, username }) => {
 	function getQuote(data) {
 		const quotes = [];
 		const min_len = 25;
-		data.forEach(item => item.text.length > min_len && quotes.push(item));
+		const max_len = 150;
+		data.forEach(item => item.text.length >= min_len && item.text.length <= max_len && quotes.push(item));
 		return quotes;
 	}
 	//useEffect(() => {

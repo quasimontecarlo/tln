@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: "m1m";
+        font-style: normal;
+        src: url(./fonts/M1MRegular-yyEe.ttf);
+    }
+    @font-face {
+        font-family: "m1m_bold";
+        font-style: normal;
+        src: url(./fonts/M1MBold-zlG4.ttf);
+    }
+    @font-face {
+        font-family: "m1m_light";
+        font-style: normal;
+        src: url(./fonts/M1MLight-590V.ttf);
+    }
+    @font-face {
+        font-family: "m1m_thin";
+        font-style: normal;
+        src: url(./fonts/M1MThin-9y0n.ttf);
+    }
+    @font-face {
+        font-family: "m1m_mid";
+        font-style: normal;
+        src: url(./fonts/M1MMedium-64EA.ttf);
+    }
+    @font-face {
+        font-family: "basker";
+        font-style: normal;
+        src: url(./fonts/LibreBaskerville-Regular.otf);
+    }
+
+}

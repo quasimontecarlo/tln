@@ -43,9 +43,9 @@ const Write = () => {
 	};
 
 	function placeholderText() {
-		let text = "tell me something";
+		let text = "tell me something ";
 		for(let i = 0; i <= 1000; i++) {
-			text += " _";
+			text += "_";
 		}
 		return text;
 	};
@@ -62,7 +62,7 @@ const Write = () => {
 					onChange={(e) => setText(e.target.value)}
 				/>
 				<div className="flex justify-end border-t py-2 border-secondary">
-					<button className="btn btn-primary underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0">
+					<button className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0">
 						{isPending ? "publishing..." : "publish"}
 					</button>
 				</div>

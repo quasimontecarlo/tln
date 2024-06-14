@@ -50,7 +50,7 @@ const Navbar = () => {
 
 	return (
 		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed", isMobile && "bottom-0" || "top-0")}>
-            <div className="flex-1 justify-start btn btn-ghost hover:bg-base-100">
+            <div className="flex-1 justify-start btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
                 <Link to={`/`} className="text-xl">
                     thelonelynetwork
                 </Link>
@@ -80,7 +80,7 @@ const Navbar = () => {
                 {data && (
 					<Link
 						to={`/profile/${data.username}`}
-						className="mt-auto mb-auto flex transition-all duration-100 rounded-full"
+						className="mt-auto mb-auto flex transition-all duration-100"
 					>
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-square avatar hover:bg-base-100">
                             <div className="w-8 rounded-md">

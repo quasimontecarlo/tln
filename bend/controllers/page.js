@@ -159,7 +159,7 @@ export const getMyPages = async (req, res) => {
     try {
         let i = req.query.index ? Number(req.query.index) : 0;
         const many = 10;
-        const pages = await Page.find({  user: req.params.id, latest: true }).sort({ createdAt: 1 }).populate({
+        const pages = await Page.find({  user: req.params.id, latest: true }).sort({ createdAt: -1 }).populate({
             path: "user",
             select: "-password -readers -reading -email -createdAt -updatedAt"
         }).lean().limit(many).skip(i * many);
