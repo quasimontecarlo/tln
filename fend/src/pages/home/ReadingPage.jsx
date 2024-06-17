@@ -1,15 +1,17 @@
 import { useState } from "react";
+import { isMobile } from "react-device-detect";
+import classNames from "../../components/common/classNames";
 
 import Pages from "../../components/common/Pages";
 
 const ReadingPage = () => {
-	const [feedType, setFeedType] = useState("reading");
+	const [feedType] = useState("reading");
 	
 	return (
 		<>
-			<div className="flex-[4_4_0] mt-16 mr-auto border-r border-gray-700 min-h-screen">
+			<div className={classNames("flex-[4_4_0]", isMobile && "mb-16" || "mt-16")}>
 
-				{/* POSTS */}
+				{/* PAGES */}
 				<Pages feedType={feedType}/>
 			</div>
 		</>

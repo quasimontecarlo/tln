@@ -50,12 +50,17 @@ const Navbar = () => {
 
 	return (
 		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed", isMobile && "bottom-0" || "top-0")}>
-            <div className="flex-1 justify-start btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
-                <Link to={`/`} className="text-xl">
-                    thelonelynetwork
+            <div className="flex-auto pe-2 justify-start btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
+                <Link to={`/`} className="flex text-xl">
+                    <p className="hidden md:block">the</p>
+                    <p className="hidden md:block text-base-200">lonely</p>
+                    <p className="hidden md:block">network</p>
+                    <p className="md:hidden">t</p>
+                    <p className="md:hidden text-base-200">l</p>
+                    <p className="md:hidden">n</p>
                 </Link>
             </div>
-            <div role="tablist" className="flex-1 tabs tabs-bordered">
+            <div role="tablist" className="flex-auto tabs tabs-bordered">
                 <Link to={write}
                 role="tab"
                 className={classNames("tab", isMatchingLocation(write) && "tab-active")}
@@ -76,7 +81,7 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            <div className="flex-1 justify-end me-0">
+            <div className="flex-auto justify-end me-0">
                 {data && (
 					<Link
 						to={`/profile/${data.username}`}

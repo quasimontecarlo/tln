@@ -61,7 +61,7 @@ const Page = ({ page, dotted }) => {
 				</div>
 				<div className="flex flex-col flex-1 mt-0.5">
 					<div className="flex gap-2 items-center">
-						<Link to={`/profile/${pageOwner.username}`} className="font-m1m_bold">
+						<Link to={`/profile/${pageOwner.username}`} className="font-m1m_mid">
 							{pageOwner.username}
 						</Link>
 						<span className="text-primary flex gap-1 text-sm">
