@@ -1,4 +1,5 @@
 import Page from "./Page";
+import Quote from "./Quote";
 import PageSkeleton from "../skeletons/PageSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, useRef } from "react";
@@ -7,6 +8,7 @@ const Pages = ({ feedType, username }) => {
 
 	const [ items, setItems ] = useState([]);
 	const [ index, setIndex ] = useState(0);
+	const [ quote, setQuote ] = useState("");
 
 
 	const getPageEndpoint = () => {
@@ -14,7 +16,7 @@ const Pages = ({ feedType, username }) => {
 			case "random":
 				return `/api/pages/random?index=${index}`;
 			case "reading":
-				return "/api/pages/reading";
+				return `/api/pages/reading?index=${index}`;
 			case "mine":
 				return `/api/pages/user/${username}?index=${index}`;
 			default:
@@ -37,7 +39,14 @@ const Pages = ({ feedType, username }) => {
 				};
 				if(data.length > 0)	{
 
-					setItems( prevItems => [...prevItems, ...data]);
+					const quotes = getQuote(data);
+					setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+
+					if(feedType === "random"){
+						setItems( prevItems => [...prevItems, ...shuffle(data)]);
+					} else {
+						setItems( prevItems => [...prevItems, ...data]);
+					}
 					setIndex( prevIndex => prevIndex +1);
 				};
 
@@ -48,15 +57,34 @@ const Pages = ({ feedType, username }) => {
 		}
 	});
 
+
+
 	const appendPages = async () => {
 		const res = await fetch(PAGES_ENDPOINT);
 		const temp = [...items];
 		const updatedData = await res.json();
-		const appended = temp.concat(updatedData);
+		let appended = []
+
+		if(feedType === "random"){
+			appended = temp.concat(shuffle(updatedData));
+		} else {
+			appended = temp.concat(updatedData);
+		}
 		setItems(appended);
 		setIndex( prevIndex => prevIndex + 1);
 	}
 
+	function shuffle(pages) {
+		return [...pages].sort(() => 0.5 - Math.random());
+	};
+
+	function getQuote(data) {
+		const quotes = [];
+		const min_len = 25;
+		const max_len = 85;
+		data.forEach(item => item.text.length >= min_len && item.text.length <= max_len && quotes.push(item));
+		return quotes;
+	}
 	//useEffect(() => {
 	//	refetch();
 	//}, [feedType, refetch, username);
@@ -84,23 +112,38 @@ const Pages = ({ feedType, username }) => {
 	  };
 	}, [observerTarget, feedType, username, index]);
 
+	
+	function isEven(n) {
+		if(n % 2 == 0) {
+			return true
+		} else {
+			return false
+		}
+	};
+
 
 	return (
 
 		<>
 			{(isLoading || isRefetching) && (
-				<div className='flex flex-col justify-center'>
+				<div className="flex flex-col justify-center">
 					<PageSkeleton />
 					<PageSkeleton />
 					<PageSkeleton />
 				</div>
 			)}
-			{!isLoading && !isRefetching && items?.length === 0 && <p className='text-center my-4'>No posts in this tab. Switch 👻</p>}
+			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">No posts in this tab. Switch 👻</p>}
 			{!isLoading && !isRefetching && items && (
 				<div>
+					{quote && (
+						<ul>
+							<Quote key={quote._id} page={quote} />
+						</ul>
+
+					)}
 					<ul>
-						{items.map(item => (
-							<Page key={item._id} page={item} />
+						{items.map((item, index) => (
+							<Page key={item._id} page={item} dotted={isEven(index+1) && true} />
 						))}
 					</ul>
 					<div ref={observerTarget}></div>
