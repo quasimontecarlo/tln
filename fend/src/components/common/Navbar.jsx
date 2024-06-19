@@ -49,7 +49,7 @@ const Navbar = () => {
     const reading = "/reading";
 
 	return (
-		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed", isMobile && "bottom-0" || "top-0")}>
+		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed z-10", isMobile && "bottom-0" || "top-0")}>
             <div className="flex-auto pe-2 justify-start btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
                 <Link to={`/`} className="flex text-xl">
                     <p className="hidden md:block">the</p>
@@ -102,7 +102,7 @@ const Navbar = () => {
                             </svg>
                       </button>
                     </div>
-                    <ul tabIndex={0} className="z-[1] shadow-l menu items-end menu-sm dropdown-content w-auto">
+                    <ul tabIndex={0} className="z-[1] shadow-l bg-base-100 menu items-end menu-sm rounded-md dropdown-content w-auto">
                         {/*<li><a>Settings</a></li>*/}
                         <li><a
                         className="hover:bg-base-100"

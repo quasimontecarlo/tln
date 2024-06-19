@@ -91,20 +91,20 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 					{!isLoading && !isRefetching && user && (
 						<>
 							{/* COVER IMG */}
-							<div className="relative group/cover">
+							<div className="group/cover h-72">
 								<img
 									src={banner || user?.banner || "/cover.png"}
-									className="h-52 w-full object-cover"
+									className="h-52 w-full object-cover rounded-md"
 									alt="cover image"
 								/>
-								{isMyProfile && (
+								{/*isMyProfile && (
 									<div
-										className="absolute top-2 right-2 rounded-full p-2 bg-gray-800 bg-opacity-75 cursor-pointer opacity-0 group-hover/cover:opacity-100 transition duration-200"
+										className="relative -top-[calc(14rem-25px)] -right-[calc(100%-30px)] cursor-pointer"
 										onClick={() => bannerRef.current.click()}
 									>
-										<MdEdit className="w-5 h-5 text-white" />
+										<MdEdit className="w-5 h-5 text-base-100" />
 									</div>
-								)}
+								)*/}
 
 								<input
 									type="file"
@@ -121,13 +121,13 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 									onChange={(e) => handleImgChange(e, "picture")}
 								/>
 								{/* USER AVATAR */}
-								<div className="avatar absolute -bottom-16 left-4">
-									<div className="w-32 rounded-full relative group/avatar">
-										<img src={picture || user?.picture || "/avatar-placeholder.png"} />
-										<div className="absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 cursor-pointer">
+								<div className="relative z-0 bottom-20 left-4">
+									<div className="w-32">
+										<img className="rounded-md" src={picture || user?.picture || "/avatar-placeholder.png"} />
+										<div className="relative -top-[calc(8rem-8px)] -right-[calc(7rem-8px)] cursor-pointer">
 											{isMyProfile && (
 												<MdEdit
-													className="w-4 h-4 text-white"
+													className="w-4 h-4 text-base-100"
 													onClick={() => pictureRef.current.click()}
 												/>
 											)}
@@ -135,59 +135,60 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 									</div>
 								</div>
 							</div>
-							<div className="flex justify-end px-4 mt-5">
-								{isMyProfile && <EditProfileModal authUser= { authUser }/>}
-								{!isMyProfile && (
-									<button
-										className="btn btn-outline rounded-full btn-sm"
-										onClick={() => read(user?._id)}
-									>
-										{isPending && "loading..."}
-										{!isPending && amIReading && "un/read"}
-										{!isPending && !amIReading && "read" }
-									</button>
-								)}
-								{(banner || picture) && (
-									<button
-										className="btn btn-primary rounded-full btn-sm text-white px-4 ml-2"
-										onClick={ async () => {
-											await updateProfile({ banner, picture });
-											setProfileImg(null);
-											setCoverImg(null);
-										}}
-									>
-										{isUpdatingProfile ? "updating..." : "update"}
-									</button>
-								)}
-							</div>
-
-							<div className="flex flex-col gap-4 mt-14 px-4">
-								<div className="flex flex-col">
-									<span className="text">{user?.username}</span>
-									<span className="text-sm my-1 text-secondary">{user?.about}</span>
-								</div>
-								<div className="flex gap-2 flex-wrap">
-									{user?.link && (
-										<div className="flex gap-1 items-center ">
-											<>
-												<FaLink className="w-3 h-3 text-secondary" />
-												<a
-													href={formatUrl(user?.link)}
-													target="_blank"
-													rel="noreferrer"
-													className="text-sm text-info hover:underline"
-												>
-													{user?.link}
-												</a>
-											</>
-										</div>
-									)}
-									<div className="flex gap-2 items-center">
-										<IoCalendarOutline className="w-4 h-4 text-secondary" />
-										<span className="text-sm text-secondary">
-											{memberSinceDate}
-										</span>
+							<div className="flex">
+								<div className="flex-auto gap-4 px-4">
+									<div className="flex">
+										<span className="text-md font-m1m_mid">{user?.username}</span>
 									</div>
+									<span className="text-sm my-1 text-secondary">{user?.about}</span>
+									<div className="flex gap-2">
+										{user?.link && (
+											<div className="flex gap-1 items-center ">
+												<>
+													<FaLink className="w-3 h-3 text-secondary" />
+													<a
+														href={formatUrl(user?.link)}
+														target="_blank"
+														rel="noreferrer"
+														className="text-sm text-info hover:underline"
+													>
+														{user?.link}
+													</a>
+												</>
+											</div>
+										)}
+										<div className="flex gap-2 items-center">
+											<IoCalendarOutline className="w-4 h-4 text-secondary" />
+											<span className="text-sm text-secondary">
+												{memberSinceDate}
+											</span>
+										</div>
+									</div>
+								</div>
+								<div className="flex-auto text-end">
+									{isMyProfile && <EditProfileModal authUser= { authUser }/>}
+									{!isMyProfile && (
+										<button
+											className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0"
+											onClick={() => read(user?._id)}
+										>
+											{isPending && "loading..."}
+											{!isPending && amIReading && "un/read"}
+											{!isPending && !amIReading && "read" }
+										</button>
+									)}
+									{(banner || picture) && (
+										<button
+											className="btn btn-primary rounded-full btn-sm px-4 ml-2"
+											onClick={ async () => {
+												await updateProfile({ banner, picture });
+												setProfileImg(null);
+												setCoverImg(null);
+											}}
+										>
+											{isUpdatingProfile ? "updating..." : "update"}
+										</button>
+									)}
 								</div>
 							</div>
 							<div className="flex w-full border-b border-primary border-dashed mt-8">

@@ -69,15 +69,15 @@ const Page = ({ page, dotted }) => {
 							<span>!=!</span>
 							<span>{formattedDate}</span>
 						</span>
-						{isMyPage && (
+						{/*isMyPage && (
 							<span className="flex justify-end flex-1">
 								{!isDeleting && (
-									<FaTrash className="cursor-pointer hover:text-error" onClick={handleDeletePage} />
+									<FaTrash className="cursor-pointer text-primary hover:text-error" onClick={handleDeletePage} />
 								)}
 
 								{isDeleting && <LoadingSpinner size="sm" />}
 							</span>
-						)}
+						)*/}
 					</div>
 					<div className="flex flex-col gap-3 overflow-hidden">
 						<p></p>

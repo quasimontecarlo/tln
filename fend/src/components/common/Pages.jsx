@@ -63,11 +63,12 @@ const Pages = ({ feedType, username }) => {
 		const res = await fetch(PAGES_ENDPOINT);
 		const temp = [...items];
 		const updatedData = await res.json();
+		let appended = []
 
 		if(feedType === "random"){
-			const appended = temp.concat(shuffle(updatedData));
+			appended = temp.concat(shuffle(updatedData));
 		} else {
-			const appended = temp.concat(updatedData);
+			appended = temp.concat(updatedData);
 		}
 		setItems(appended);
 		setIndex( prevIndex => prevIndex + 1);
