@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import { BiLogOut } from "react-icons/bi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import classNames from "./classNames";
@@ -28,6 +27,7 @@ const Navbar = () => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({queryKey: ["authUser"]});
+            
 		},
 		onError: () => {
 			toast.error("logout failed");
@@ -47,6 +47,7 @@ const Navbar = () => {
     const home = "/";
     const write = "/write";
     const reading = "/reading";
+    const pp = `/profile/${data?.username}`;
 
 	return (
 		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed z-10", isMobile && "bottom-0" || "top-0")}>
@@ -84,7 +85,7 @@ const Navbar = () => {
             <div className="flex-auto justify-end me-0">
                 {data && (
 					<Link
-						to={`/profile/${data.username}`}
+                        onClick={() => {window.location.href=pp}}
 						className="mt-auto mb-auto flex transition-all duration-100"
 					>
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-square avatar hover:bg-base-100">
@@ -107,8 +108,8 @@ const Navbar = () => {
                         <li><a
                         className="hover:bg-base-100"
                         onClick={(e) => {
-                        e.preventDefault();
-                        logout();
+                            e.preventDefault();
+                            logout();
                         }}>logout</a></li>
                     </ul>
                 </div>

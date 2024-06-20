@@ -16,6 +16,7 @@ import classNames from "../../components/common/classNames";
 
 import readUser from "../../hooks/readUser";
 import useUpdateUserProfile from "../../hooks/useUpdateProfile";
+import Banner from "../../components/common/Banner";
 
 const ProfilePage = () => {
 
@@ -44,6 +45,7 @@ const ProfilePage = () => {
 			throw new Error(error);
 			}
 		},
+
 	});
 
 const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
@@ -92,11 +94,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 						<>
 							{/* COVER IMG */}
 							<div className="group/cover h-72">
-								<img
-									src={banner || user?.banner || "/cover.png"}
-									className="h-52 w-full object-cover rounded-md"
-									alt="cover image"
-								/>
+								<Banner userId={user?._id}/>
 								{/*isMyProfile && (
 									<div
 										className="relative -top-[calc(14rem-25px)] -right-[calc(100%-30px)] cursor-pointer"
@@ -196,7 +194,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 						</>
 					)}
 
-					<Pages feedType={"mine"} username={username}/>
+					<Pages feedType={"mine"} username={ username }/>
 				</div>
 			</div>
 		</>

@@ -27,7 +27,7 @@ const Pages = ({ feedType, username }) => {
 
 	const PAGES_ENDPOINT = getPageEndpoint(index);
 	
-	const { data , isLoading, refetch, isRefetching }= useQuery({
+	const { data , isLoading, isRefetching }= useQuery({
 		queryKey: ["pages"],
 		queryFn: async () => {
 			try {
@@ -84,32 +84,30 @@ const Pages = ({ feedType, username }) => {
 		const max_len = 85;
 		data.forEach(item => item.text.length >= min_len && item.text.length <= max_len && quotes.push(item));
 		return quotes;
-	}
-	//useEffect(() => {
-	//	refetch();
-	//}, [feedType, refetch, username);
+	};
 
 	const observerTarget = useRef(null);
 
 	useEffect(() => {
-	  const observer = new IntersectionObserver(
-		entries => {
-		  	if (entries[0].isIntersecting) {
-				appendPages();
-		  	}
-		},
-		{ threshold: 1 }
-	  );
-	
-	  if (observerTarget.current) {
+		
+		const observer = new IntersectionObserver(
+			entries => {
+				if (entries[0].isIntersecting) {
+					appendPages();
+				}
+			},
+			{ threshold: 1 }
+		);
+
+		if (observerTarget.current) {
 		observer.observe(observerTarget.current);
-	  }
-	
-	  return () => {
-		if (observerTarget.current) { 
-		  	observer.unobserve(observerTarget.current);
 		}
-	  };
+
+		return () => {
+		if (observerTarget.current) { 
+			observer.unobserve(observerTarget.current);
+		}
+		};
 	}, [observerTarget, feedType, username, index]);
 
 	

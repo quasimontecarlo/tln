@@ -56,7 +56,7 @@ export default {
     },
   },
 
-  plugins: [require("@tailwindcss/typography"), require("daisyui"), require("tailwind-scrollbar")({ nocompatible: true})],
+  plugins: [require("@tailwindcss/typography"), require("daisyui"), require("tailwind-scrollbar")({ nocompatible: true}), require("seedrandom")],
 
   daisyui: {
     themes: [
