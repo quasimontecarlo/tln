@@ -5,7 +5,6 @@ import Pages from "../../components/common/Pages";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
 import EditProfileModal from "./EditProfileModal";
 
-import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -61,14 +60,14 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 			reader.onload = () => {
 				state === "banner" && setCoverImg(reader.result);
 				state === "picture" && setProfileImg(reader.result);
-			};
+				};
 			reader.readAsDataURL(file);
 		}
 	};
 
 	useEffect(() => {
 		refetch();
-	}, [username, refetch])
+	}, [username, refetch]);
 
 	function formatUrl(url) {
 		if(!url.includes("http://") && !url.includes("https://")) {
@@ -177,11 +176,12 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 									)}
 									{(banner || picture) && (
 										<button
-											className="btn btn-primary rounded-full btn-sm px-4 ml-2"
+											className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0"
 											onClick={ async () => {
 												await updateProfile({ banner, picture });
 												setProfileImg(null);
 												setCoverImg(null);
+												{window.location.href=`/profile/${user?.username}`}
 											}}
 										>
 											{isUpdatingProfile ? "updating..." : "update"}

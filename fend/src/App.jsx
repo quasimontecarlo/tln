@@ -41,9 +41,9 @@ function App() {
 	}
 
 	return (
-		<div className="max-w-6xl mx-auto justify-center items-center">
+		<div className="max-w-6xl mx-auto">
 			{authUser && <Navbar />}
-			<div className="flex max-w-6xl mx-auto">
+			<div className="flex">
 
 				<Routes>
 					<Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />

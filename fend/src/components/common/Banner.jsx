@@ -12,7 +12,9 @@ const Banner = ({ userId }) => {
     useEffect(() => {
         const canvasEle = canvas.current;
         canvasEle.style.width = "100%";
-        canvasEle.width = canvasEle.offsetWidth;
+        canvasEle.style.height = "100%";
+        //canvasEle.width = canvasEle.offsetWidth;
+        canvasEle.width = 1152;
         canvasEle.height = 208;
         ctx = canvasEle.getContext("2d");
     }, []);
@@ -29,6 +31,7 @@ const Banner = ({ userId }) => {
 
         ctx.strokeStyle = "#434c5e";
         ctx.lineCap = "round";
+        ctx.lineJoin = "round";
         ctx.lineWidth = 1;
         render(ctx, res, utils);
 
@@ -103,7 +106,7 @@ const Banner = ({ userId }) => {
 
 
     return (
-        <div className="flex items-center">
+        <div className="h-52">
                 <canvas ref={canvas} />
         </div>
                 

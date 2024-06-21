@@ -27,11 +27,11 @@ const Pages = ({ feedType, username }) => {
 
 	const PAGES_ENDPOINT = getPageEndpoint(index);
 	
-	const { data , isLoading, isRefetching }= useQuery({
+	const { data , isLoading, isRefetching, refetch } = useQuery({
 		queryKey: ["pages"],
-		queryFn: async () => {
+		queryFn: async (index, quote, items) => {
 			try {
-				
+				console.log(items);
 				const res = await fetch(PAGES_ENDPOINT);
 				const data = await res.json();
 				if(!res.ok) {
@@ -56,8 +56,6 @@ const Pages = ({ feedType, username }) => {
 			}
 		}
 	});
-
-
 
 	const appendPages = async () => {
 		const res = await fetch(PAGES_ENDPOINT);
@@ -100,15 +98,15 @@ const Pages = ({ feedType, username }) => {
 		);
 
 		if (observerTarget.current) {
-		observer.observe(observerTarget.current);
+			observer.observe(observerTarget.current);
 		}
 
 		return () => {
-		if (observerTarget.current) { 
-			observer.unobserve(observerTarget.current);
-		}
+			if (observerTarget.current) { 
+				observer.unobserve(observerTarget.current);
+			}
 		};
-	}, [observerTarget, feedType, username, index]);
+	}, [observerTarget, feedType, username, refetch, index]);
 
 	
 	function isEven(n) {
