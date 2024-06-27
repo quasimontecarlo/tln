@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useId } from "react";
 import seedrandom from "seedrandom";
+import { isMobile } from "react-device-detect";
 
 const Banner = ({ userId }) => {
 
@@ -15,6 +16,9 @@ const Banner = ({ userId }) => {
         canvasEle.style.height = "100%";
         //canvasEle.width = canvasEle.offsetWidth;
         canvasEle.width = 1152;
+        if(isMobile){
+            canvasEle.width = 559;
+        }
         canvasEle.height = 208;
         ctx = canvasEle.getContext("2d");
     }, []);

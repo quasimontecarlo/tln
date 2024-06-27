@@ -16,6 +16,7 @@ import classNames from "../../components/common/classNames";
 import readUser from "../../hooks/readUser";
 import useUpdateUserProfile from "../../hooks/useUpdateProfile";
 import Banner from "../../components/common/Banner";
+import Picture from "../../components/common/Picture";
 
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../../components/common/cropImage";
@@ -180,7 +181,7 @@ const ProfilePage = () => {
 								{/* USER AVATAR */}
 								<div className="relative z-0 bottom-20 left-4">
 									<div className="w-32">
-										<img className="rounded-md" src={picture || user?.picture || "/avatar-placeholder.png"} />
+									<img className="rounded-md" src={picture || user?.picture || "/avatar-placeholder.png"} />
 										<div className="relative -top-[calc(8rem-8px)] -right-[calc(7rem-8px)] cursor-pointer">
 											{isMyProfile && (
 												<MdEdit
@@ -190,6 +191,7 @@ const ProfilePage = () => {
 											)}
 										</div>
 									</div>
+									<Picture userId={user?._id}/>
 								</div>
 							</div>
 							<div className="flex">
