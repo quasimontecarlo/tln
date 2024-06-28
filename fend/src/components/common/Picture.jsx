@@ -21,7 +21,7 @@ const Picture = ({ userId }) => {
                         "spacing": 12,
                         "distx": 12,
                         "thickness": 2,
-                        "many": 15,
+                        "many": 10,
         };
         const res = { "w" : canvas.current.width,
                       "h" : canvas.current.height,
@@ -42,6 +42,35 @@ const Picture = ({ userId }) => {
             this.y = y;
             this.r = r;
             this.growing = true;
+            this.plist = [];
+        };
+
+        points(ctx, c, utils, allv) {
+            let points = 0;
+            if (c.r <= 2) {
+                points = 1;
+            } else if (c.r <= 5) {
+                points = 4;
+            } else if (c.r <= 10) {
+                points = 8;
+            } else {
+                points = 10;
+            }
+            const arc = Math.PI*2 / points;
+            let ang = 0;
+            for(let i = 0; i < points; i++) {
+                const x = c.r * Math.cos(ang) + (c.x);
+                const y = c.r * Math.sin(ang) + (c.y);
+                ctx.beginPath();
+                ctx.lineWidth = utils.thickness;
+                ctx.strokeStyle = "red";
+                ctx.arc(x, y, 0.5, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+                this.plist.push(new CC(x, y, 0.5));
+                allv.push({x: x, y: y});
+                ang += arc;
+            };
         };
 
         edges(res, utils) {
@@ -63,7 +92,10 @@ const Picture = ({ userId }) => {
 
     function rndr(ctx, res, utils) {
         const clist = [];
-        const frames = 50;
+        const allv = [];
+        const hullp = [];
+
+        const frames = 500;
 
         for (let i = 0; i < utils.many; i++) {
             makeCircle(clist, res);
@@ -90,6 +122,127 @@ const Picture = ({ userId }) => {
         clist.forEach(c => {
             c.draw(ctx, utils);
         });
+        clist.forEach(c => {
+            c.points(ctx, c, utils, allv);
+        });
+
+        quickHull(allv, hullp);
+        const shape = sortPs(hullp);
+        drawBlob(shape, ctx);
+    };
+
+    function quickHull(allv, hullp){
+        allv.sort(function(a,b){return a.x - b.x});
+
+        let left = allv[0];
+        let right = allv[allv.length-1];
+
+
+        hullp.push(left);
+        hullp.push(right);
+
+        let spline1 = new makeLine(left, right);
+        let spline2 = new makeLine(right, left);
+
+        let splits = splitPoints(allv, spline1);
+
+        findHull(splits[0], spline1, hullp);
+        findHull(splits[1], spline2, hullp);
+    };
+
+    function makeLine(pt1, pt2){
+        this.pt1 = pt1;
+        this.pt2 = pt2;
+    };
+
+    function findHull(s, line, hullp) {
+        if(s.length === 0) {
+            return 0
+        } else {
+            let idx = findFurthest(s, line)
+            
+            hullp.push(s[idx]);
+
+            let trline1 = new makeLine(line.pt1, s[idx]);
+            let trline2 = new makeLine(s[idx], line.pt2);
+
+            let trsplit1 = splitPoints(s, trline1);
+            let trsplit2 = splitPoints(s, trline2);
+            
+            findHull(trsplit1[0], trline1, hullp);
+            findHull(trsplit2[0], trline2, hullp);
+        };
+    };
+
+    function dist2(v, w) {
+        return ((v.x - w.x)*(v.x - w.x)) + ((v.y - w.y)*(v.y - w.y));
+    };
+      
+    function distToSegment(p, v, w) {
+        let l2 = dist2(v, w);
+        if (l2 === 0) {
+          return dist2(p, v);
+           }
+      
+        var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+      
+        t = Math.max(0, Math.min(1, t));
+
+      
+        return Math.sqrt(dist2(p, {
+          x: v.x + t * (w.x - v.x),
+          y: v.y + t * (w.y - v.y)
+        }));
+    };
+      
+    function distancePointLine(pt, line) {
+        return distToSegment(pt, line.pt1, line.pt2)
+    };
+
+    function findFurthest(S, line) {
+        let maxD = 0
+        let idx = -1
+        for (let n = 0; n < S.length; n++) {
+          let d = distancePointLine(S[n], line);
+          if (d > maxD) {
+            maxD = d
+            idx = n
+          }
+        }
+      
+        return idx
+    };
+    
+    function sortPs(pts) {
+        const center = pts.reduce((acc, {x, y}) => {
+            acc.x += x / pts.length;
+            acc.y += y / pts.length;
+            return acc;
+        }, {x: 0, y:0});
+
+        const angles = pts.map(({x,y}) => {
+            return { x, y, angle: Math.atan2(y - center.y, x - center.x) * 180 / Math.PI};
+        });
+
+        const ptsSort = angles.sort((a, b) => a.angle - b.angle);
+        return ptsSort;
+    };
+
+    function splitPoints(pts, line){
+
+        let s1 = [];
+        let s2 = [];
+        for (let n = 0; n < pts.length; n++) {
+            let pt = pts[n];
+            let d = (line.pt1.x - pt.x) * (line.pt2.y - pt.y) - (line.pt2.x - pt.x) * (line.pt1.y - pt.y);
+
+            if (d < 0) {
+                s1.push(pt);
+            } else if ( d > 0) {
+                s2.push(pt)
+            };
+        };
+        return [s1, s2];
     };
 
     function makeCircle(clist, res) {
@@ -104,11 +257,23 @@ const Picture = ({ userId }) => {
             };
             });
         if(valid) {
-            return clist.push(new CC(x, y, 1));
+            return clist.push(new CC(x, y, 0.1));
         } else {
             return null;
         };
-    }
+    };
+
+    function drawBlob(pts, ctx) {
+        ctx.beginPath();
+        ctx.strokeStyle = "blue";
+        ctx.moveTo(pts[0].x, pts[0].y);
+        pts.forEach(pt => {
+            ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.lineTo(pts[0].x, pts[0].y);
+        ctx.stroke();
+        ctx.closePath();
+    };
 
     function map(value, inMin, inMax, outMin, outMax) {
         return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
@@ -219,7 +384,6 @@ const Picture = ({ userId }) => {
         };
         points.push({x,y});
 
-        console.log(points);
         bzCurve(points, 0.3, 1);
     };
     function gradient(a, b) { 

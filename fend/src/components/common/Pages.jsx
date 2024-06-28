@@ -128,7 +128,7 @@ const Pages = ({ feedType, username }) => {
 					<PageSkeleton />
 				</div>
 			)}
-			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">No posts in this tab. Switch 👻</p>}
+			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">you're not reading anyone,<br></br>give someone a chance</p>}
 			{!isLoading && !isRefetching && items && (
 				<div>
 					{quote && (
