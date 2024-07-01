@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import Pages from "../../components/common/Pages";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
 import EditProfileModal from "./EditProfileModal";
 
-import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
@@ -16,6 +15,11 @@ import classNames from "../../components/common/classNames";
 
 import readUser from "../../hooks/readUser";
 import useUpdateUserProfile from "../../hooks/useUpdateProfile";
+import Banner from "../../components/common/Banner";
+import Picture from "../../components/common/Picture";
+
+import Cropper from "react-easy-crop";
+import getCroppedImg from "../../components/common/cropImage";
 
 const ProfilePage = () => {
 
@@ -44,9 +48,11 @@ const ProfilePage = () => {
 			throw new Error(error);
 			}
 		},
+
 	});
 
-const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
+	const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
+
 
 	const isMyProfile = authUser._id === user?._id;
 	const memberSinceDate = formatMemberSinceDate(user?.createdAt);
@@ -57,7 +63,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = () => {
-				state === "banner" && setCoverImg(reader.result);
+				document.getElementById("crop_picture_modal").showModal();
 				state === "picture" && setProfileImg(reader.result);
 			};
 			reader.readAsDataURL(file);
@@ -66,7 +72,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 
 	useEffect(() => {
 		refetch();
-	}, [username, refetch])
+	}, [username, refetch]);
 
 	function formatUrl(url) {
 		if(!url.includes("http://") && !url.includes("https://")) {
@@ -81,6 +87,35 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 		}
 	};
 
+
+	// Crop Picture Modal
+	const [crop, setCrop] = useState({ x: 128, y: 128 });
+	const [zoom, setZoom] = useState(1);
+	const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+	const [croppedImage, setCroppedImage] = useState(null);
+	
+	const onCropComplete = (croppedArea, croppedAreaPixels) => {
+		setCroppedAreaPixels(croppedAreaPixels)
+	};
+
+	const onClose = () => {
+		setCroppedImage(null)
+	};
+
+	const showCroppedImage = async () => {
+		try {
+		  const croppedImage = await getCroppedImg(
+			picture,
+			croppedAreaPixels,
+		  )
+		  console.log('donee', { croppedImage })
+		  document.getElementById("crop_picture_modal").close();
+		  setProfileImg(croppedImage);
+		} catch (e) {
+		  console.error(e)
+		}
+	};
+
 	return (
 		<>
 			<div className={classNames("flex-[4_4_0]", isMobile && "mb-16" || "mt-16")}>
@@ -92,11 +127,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 						<>
 							{/* COVER IMG */}
 							<div className="group/cover h-72">
-								<img
-									src={banner || user?.banner || "/cover.png"}
-									className="h-52 w-full object-cover rounded-md"
-									alt="cover image"
-								/>
+								<Banner userId={user?._id}/>
 								{/*isMyProfile && (
 									<div
 										className="relative -top-[calc(14rem-25px)] -right-[calc(100%-30px)] cursor-pointer"
@@ -105,7 +136,6 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 										<MdEdit className="w-5 h-5 text-base-100" />
 									</div>
 								)*/}
-
 								<input
 									type="file"
 									hidden
@@ -120,10 +150,38 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 									ref={pictureRef}
 									onChange={(e) => handleImgChange(e, "picture")}
 								/>
+
+								{/* PICTURE MODAL */}
+								<dialog id="crop_picture_modal" className="modal">
+									<div className="modal-box border rounded-md border-primary shadow-md w-2/3">
+										<div className="crop-container relative w-full h-96">
+											<Cropper
+												image={picture}
+												crop={crop}
+												zoom={zoom}
+												zoomSpeed={4}
+												aspect={4 / 4}
+												showGrid={true}
+												zoomWithScroll={true}
+												restrictPosition={false}
+												onCropChange={setCrop}
+												onCropComplete={onCropComplete}
+												onZoomChange={setZoom}
+												/>
+										</div>
+										<div className="flex justify-end">
+											<button className="focus-visible:outline-none btn-ghost outline-base-100 btn-sm font-normal font-m1m_bold underline underline-offset-2 text-secondary-content hover:bg-base-100 mt-2 p-0" 
+													onClick={showCroppedImage}>
+													crop
+											</button>
+										</div>
+									</div>
+								</dialog>
+
 								{/* USER AVATAR */}
 								<div className="relative z-0 bottom-20 left-4">
 									<div className="w-32">
-										<img className="rounded-md" src={picture || user?.picture || "/avatar-placeholder.png"} />
+									<img className="rounded-md" src={picture || user?.picture || "/avatar-placeholder.png"} />
 										<div className="relative -top-[calc(8rem-8px)] -right-[calc(7rem-8px)] cursor-pointer">
 											{isMyProfile && (
 												<MdEdit
@@ -133,6 +191,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 											)}
 										</div>
 									</div>
+									<Picture userId={user?._id}/>
 								</div>
 							</div>
 							<div className="flex">
@@ -179,11 +238,12 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 									)}
 									{(banner || picture) && (
 										<button
-											className="btn btn-primary rounded-full btn-sm px-4 ml-2"
+											className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-info hover:bg-base-100 pe-0"
 											onClick={ async () => {
 												await updateProfile({ banner, picture });
 												setProfileImg(null);
 												setCoverImg(null);
+												{window.location.href=`/profile/${user?.username}`}
 											}}
 										>
 											{isUpdatingProfile ? "updating..." : "update"}
@@ -196,7 +256,7 @@ const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
 						</>
 					)}
 
-					<Pages feedType={"mine"} username={username}/>
+					<Pages feedType={"mine"} username={ username }/>
 				</div>
 			</div>
 		</>

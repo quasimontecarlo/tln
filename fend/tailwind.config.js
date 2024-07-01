@@ -52,11 +52,14 @@ export default {
         m1m_mid: "m1m_mid",
         m1m_light: "m1m_light",
         basker: "basker",
-      }
+      },
+      ringColor: {
+        "1": "0px",
+      },
     },
   },
 
-  plugins: [require("@tailwindcss/typography"), require("daisyui"), require("tailwind-scrollbar")({ nocompatible: true})],
+  plugins: [require("@tailwindcss/typography"), require("daisyui"), require("tailwind-scrollbar")({ nocompatible: true}), require("seedrandom")],
 
   daisyui: {
     themes: [
@@ -91,7 +94,6 @@ export default {
           "--border-btn": "1px", // border width of buttons
           "--tab-border": "1px", // border width of tabs
           "--tab-radius": "0.5rem", // border radius of tabs
-
         },
       },
       "nord",

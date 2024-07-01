@@ -27,11 +27,11 @@ const Pages = ({ feedType, username }) => {
 
 	const PAGES_ENDPOINT = getPageEndpoint(index);
 	
-	const { data , isLoading, refetch, isRefetching }= useQuery({
+	const { data , isLoading, isRefetching, refetch } = useQuery({
 		queryKey: ["pages"],
-		queryFn: async () => {
+		queryFn: async (index, quote, items) => {
 			try {
-				
+				console.log(items);
 				const res = await fetch(PAGES_ENDPOINT);
 				const data = await res.json();
 				if(!res.ok) {
@@ -56,8 +56,6 @@ const Pages = ({ feedType, username }) => {
 			}
 		}
 	});
-
-
 
 	const appendPages = async () => {
 		const res = await fetch(PAGES_ENDPOINT);
@@ -84,33 +82,31 @@ const Pages = ({ feedType, username }) => {
 		const max_len = 85;
 		data.forEach(item => item.text.length >= min_len && item.text.length <= max_len && quotes.push(item));
 		return quotes;
-	}
-	//useEffect(() => {
-	//	refetch();
-	//}, [feedType, refetch, username);
+	};
 
 	const observerTarget = useRef(null);
 
 	useEffect(() => {
-	  const observer = new IntersectionObserver(
-		entries => {
-		  	if (entries[0].isIntersecting) {
-				appendPages();
-		  	}
-		},
-		{ threshold: 1 }
-	  );
-	
-	  if (observerTarget.current) {
-		observer.observe(observerTarget.current);
-	  }
-	
-	  return () => {
-		if (observerTarget.current) { 
-		  	observer.unobserve(observerTarget.current);
+		
+		const observer = new IntersectionObserver(
+			entries => {
+				if (entries[0].isIntersecting) {
+					appendPages();
+				}
+			},
+			{ threshold: 1 }
+		);
+
+		if (observerTarget.current) {
+			observer.observe(observerTarget.current);
 		}
-	  };
-	}, [observerTarget, feedType, username, index]);
+
+		return () => {
+			if (observerTarget.current) { 
+				observer.unobserve(observerTarget.current);
+			}
+		};
+	}, [observerTarget, feedType, username, refetch, index]);
 
 	
 	function isEven(n) {
@@ -132,7 +128,7 @@ const Pages = ({ feedType, username }) => {
 					<PageSkeleton />
 				</div>
 			)}
-			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">No posts in this tab. Switch 👻</p>}
+			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">you're not reading anyone,<br></br>give someone a chance</p>}
 			{!isLoading && !isRefetching && items && (
 				<div>
 					{quote && (

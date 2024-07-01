@@ -106,7 +106,9 @@ const EditProfileModal = ({ authUser }) => {
 								onChange={handleInputChange}
 							/>
 						</div>
-						<button className="justify-end btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0">update</button>
+						<button onClick={() => {window.location.href=`/profile/${formData.username}`}} className="justify-end btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-info hover:bg-base-100 pe-0">
+							update
+						</button>
 					</form>
 				</div>
 				<form method="dialog" className="modal-backdrop">
