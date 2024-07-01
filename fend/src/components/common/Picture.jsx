@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useId } from "react";
 import seedrandom from "seedrandom";
 import { isMobile } from "react-device-detect";
+import concaveman from "concaveman";
 
 const Picture = ({ userId }) => {
     const rng = seedrandom(userId);
@@ -21,10 +22,11 @@ const Picture = ({ userId }) => {
                         "spacing": 12,
                         "distx": 12,
                         "thickness": 2,
-                        "many": 10,
+                        "many": 100,
+                        "divs": 3,
         };
-        const res = { "w" : canvas.current.width,
-                      "h" : canvas.current.height,
+        const res = { "w" : canvas.current.width - utils.pad,
+                      "h" : canvas.current.height - utils.pad,
         };
 
         //ctx.strokeStyle = "#434c5e";
@@ -32,6 +34,7 @@ const Picture = ({ userId }) => {
         //ctx.lineJoin = "round";
         //ctx.lineWidth = 1;
         //render(ctx, res, utils);
+        bgcolor(ctx, res, utils);
         rndr(ctx, res, utils);
 
     }, []);
@@ -45,17 +48,20 @@ const Picture = ({ userId }) => {
             this.plist = [];
         };
 
-        points(ctx, c, utils, allv) {
+        points(ctx, c, res, utils, allv, b1, b2, b3, val) {
             let points = 0;
             if (c.r <= 2) {
-                points = 1;
+                points = 0;
             } else if (c.r <= 5) {
-                points = 4;
+                points = 3;
             } else if (c.r <= 10) {
                 points = 8;
-            } else {
+            } else if (c.r <= 15) {
                 points = 10;
-            }
+            } else {
+                points = 15;
+            };
+
             const arc = Math.PI*2 / points;
             let ang = 0;
             for(let i = 0; i < points; i++) {
@@ -68,14 +74,18 @@ const Picture = ({ userId }) => {
                 ctx.stroke();
                 ctx.closePath();
                 this.plist.push(new CC(x, y, 0.5));
-                allv.push({x: x, y: y});
+                //allv.push({x: x, y: y});
+
+                // choice time
+                choice(val, x, y, res, utils, b1, b2, b3);
+
                 ang += arc;
             };
         };
 
         edges(res, utils) {
-            return (this.x + (this.r+(utils.thickness*2)) > res.w || this.x - (this.r+(utils.thickness*2)) < 0 ||
-                this.y + (this.r+(utils.thickness*2)) > res.h || this.y - (this.r+(utils.thickness*2)) < 0)
+            return (this.x + (this.r+(utils.thickness)) > res.w || this.x - (this.r+(utils.thickness)) < utils.pad ||
+                this.y + (this.r+(utils.thickness)) > res.h || this.y - (this.r+(utils.thickness)) < utils.pad)
         };
 
         grow() {
@@ -93,12 +103,16 @@ const Picture = ({ userId }) => {
     function rndr(ctx, res, utils) {
         const clist = [];
         const allv = [];
-        const hullp = [];
+        const b1 = []; 
+        const b2 = [];
+        const b3 = [];
+        const val = Math.floor(map(rng(), 0, 1, 5, 100));
+        //const hullp = [];
 
         const frames = 500;
 
         for (let i = 0; i < utils.many; i++) {
-            makeCircle(clist, res);
+            makeCircle(clist, res, utils);
         };
 
         for (let i = 0; i < frames; i++) {
@@ -123,12 +137,110 @@ const Picture = ({ userId }) => {
             c.draw(ctx, utils);
         });
         clist.forEach(c => {
-            c.points(ctx, c, utils, allv);
+            c.points(ctx, c, res, utils, allv, b1, b2, b3, val);
         });
 
-        quickHull(allv, hullp);
-        const shape = sortPs(hullp);
-        drawBlob(shape, ctx);
+        // using quickHull ref https://www.gorillasun.de/blog/quickhull-algorithm-for-convex-hulls/
+        //quickHull(allv, hullp);
+        //const shape = sortPs(hullp);
+        //drawBlob(shape, ctx);
+
+
+        const blob1 = concaveman(b1, 2, 25);
+        const blob2 = concaveman(b2, 2, 25);
+        const blob3 = concaveman(b3, 2, 25);
+
+        drawBob(blob1, ctx);
+        drawBob(blob2, ctx);
+        drawBob(blob3, ctx);
+    };
+
+    function bgcolor(ctx, res, utils) {
+        ctx.rect(0, 0, res.w+utils.pad, res.h+utils.pad);
+        ctx.fillStyle = "#e1e1e1";
+        ctx.fill();
+    };
+
+    function choice(val, x, y, res, utils, b1, b2, b3) {
+        let space = 1;
+        val = 85;
+
+        if (val > 85) {
+            // verticla split
+            if ( x > utils.pad && x < ((res.w/utils.divs)-space)) {
+                return b1.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w) {
+                return b3.push([x,y]);
+            };
+        } else if (val > 70) {
+            // horizontal split
+            if ( y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b1.push([x,y]);
+            } else if (y > ((res.h/utils.divs)+space) && y < ((res.h/utils.divs)*2)-space) {
+                return b2.push([x,y]);
+            } else if (y > (((res.h/utils.divs)*2)+space) && y < res.h) {
+                return b3.push([x,y]);
+            };            
+        } else if (val > 65) {
+            // middle tall up
+            if ( x > utils.pad && x < ((res.w/utils.divs)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < res.w && y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b2.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b3.push([x,y]);
+            };
+        } else if (val > 50) {
+            // middle tall down
+            if ( x > utils.pad && x < ((res.w/utils.divs)-space) && y > utils.pad && y < (((res.h/utils.divs)*2)-space)) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < res.w && y > (((res.h/utils.divs)*2)+space) && y < res.h) {
+                return b2.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > utils.pad && y < (((res.h/utils.divs)*2)-space)) {
+                return b3.push([x,y]);
+            };
+        } else if (val > 35) {
+            // last tall up
+            if ( y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b3.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > utils.pad && y < res.h) {
+                return b3.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b2.push([x,y]);
+            } else if (x > utils.pad && x < ((res.w/utils.divs)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b1.push([x,y]);
+            };
+        } else if (val > 20) {
+            // first tall up
+            if (y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < ((res.w/utils.divs)-space) && y > utils.pad && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b3.push([x,y]);
+            };
+        } else {
+            // eye
+            if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space) &&  y > ((res.h/utils.divs)+space) && y < (((res.h/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > utils.pad && x < ((res.w/utils.divs)-space) && y > utils.pad && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < (((res.w/utils.divs)*2)-space) && y > (((res.h/utils.divs)*2)+space) && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > utils.pad && y < res.h) {
+                return b3.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < res.w && y > utils.pad && y < ((res.h/utils.divs)+space)) {
+                return b3.push([x,y]);
+            };
+        };
     };
 
     function quickHull(allv, hullp){
@@ -202,13 +314,14 @@ const Picture = ({ userId }) => {
     function findFurthest(S, line) {
         let maxD = 0
         let idx = -1
+        const concaveRatio = 1.2;
         for (let n = 0; n < S.length; n++) {
           let d = distancePointLine(S[n], line);
-          if (d > maxD) {
+          if (d > (maxD/concaveRatio)) {
             maxD = d
             idx = n
           }
-        }
+        };
       
         return idx
     };
@@ -245,9 +358,11 @@ const Picture = ({ userId }) => {
         return [s1, s2];
     };
 
-    function makeCircle(clist, res) {
-        const x = map(rng(), 0, 1, 0, res.w);
-        const y = map(rng(), 0, 1, 0, res.h);
+    function makeCircle(clist, res, utils) {
+        let r = Math.sqrt(rng());
+        let theta = rng() * Math.PI*2;
+        const x = map((r * Math.cos(theta)), -1, 1, utils.pad, res.w);
+        const y = map((r * Math.sin(theta)), -1, 1, utils.pad, res.h);
         let valid = true;
 
         clist.forEach(c => {
@@ -271,6 +386,21 @@ const Picture = ({ userId }) => {
             ctx.lineTo(pt.x, pt.y);
         });
         ctx.lineTo(pts[0].x, pts[0].y);
+        ctx.stroke();
+        ctx.closePath();
+    };
+
+
+    function drawBob(pts, ctx) {
+        ctx.beginPath();
+        ctx.strokeStyle = "blue";
+        ctx.moveTo(pts[0][0], pts[0][1]);
+        let i = 1;
+        pts.forEach(pt => {
+            ctx.lineTo(pt[0], pt[1]);
+            i++
+        });
+        ctx.lineTo(pts[0][0], pts[0][1]);
         ctx.stroke();
         ctx.closePath();
     };
