@@ -108,7 +108,6 @@ const ProfilePage = () => {
 			picture,
 			croppedAreaPixels,
 		  )
-		  console.log('donee', { croppedImage })
 		  document.getElementById("crop_picture_modal").close();
 		  setProfileImg(croppedImage);
 		} catch (e) {

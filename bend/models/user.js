@@ -14,7 +14,6 @@ const userSchema = new mongoose.Schema(
         },
         email:{
             type: String,
-            required: true,
             unique: true,
         },
         readers:[
@@ -33,7 +32,7 @@ const userSchema = new mongoose.Schema(
         ],
         picture:{
             type: String,
-            default: "",
+
         },
         banner:{
             type: String,

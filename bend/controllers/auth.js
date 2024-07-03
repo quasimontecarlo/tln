@@ -1,6 +1,9 @@
 import { generateTokenAndSetCookie  } from "../lib/utils/generateToken.js";
 import User from "../models/user.js";
+import Page from "../models/page.js";
 import bcrypt from "bcryptjs";
+import {v2 as cloudinary } from "cloudinary";
+
 
 export const signup = async (req, res) => {
     try {
@@ -102,5 +105,32 @@ export const getMe = async (req, res) => {
     } catch (error) {
         console.log( "erro' in getme controller", error.message );
         res.status(500).json({ error: "internal server error"});
+    }
+};
+
+export const deleteUser = async (req, res) => {
+    try {
+        const pages = await Page.find({user: req.user._id});
+        console.log(pages);
+
+        for(let pgId in pages) {
+            if(pages[pgId].img) {
+                const imgId = pages[pgId].img.split("/").pop().split(".")[0];
+                await cloudinary.uploader.destroy(imgId);
+            };
+            await Page.findByIdAndDelete(pages[pgId]._id);
+        };
+
+        const user = await User.findById(req.user._id);
+        if(user.picture) {
+            const imgId = user.picture.split("/").pop().split(".")[0];
+            await cloudinary.uploader.destroy(imgId);
+        };
+        
+        await User.findByIdAndDelete(req.user._id);
+        res.status(200).json("user deleted");
+    } catch (error) {
+        console.log( "error in deleteUser controller", error.message );
+        res.status(500).json({ error: "internal server error "+ error.message});
     }
 };
