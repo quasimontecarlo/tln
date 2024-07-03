@@ -1,13 +1,17 @@
-import React, { useRef, useEffect, useId } from "react";
+import { useRef, useEffect, useState } from "react";
 import seedrandom from "seedrandom";
-import { isMobile } from "react-device-detect";
 import concaveman from "concaveman";
+import useUpdateUserProfile from "../../hooks/useUpdateProfile";
 
-const Picture = ({ userId }) => {
+const Picture = () => {
+
+    const userId = window.location.href.split("/").pop();
     const rng = seedrandom(userId);
 
     const canvas = useRef();
     let ctx = null;
+    const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
+
 
     useEffect(() => {
         const canvasEle = canvas.current;
@@ -17,17 +21,17 @@ const Picture = ({ userId }) => {
     }, []);
 
     useEffect(() => {
-
         const utils = { "pad": 10,
-                        "spacing": 12,
-                        "distx": 12,
-                        "thickness": 2,
-                        "many": 65,
-                        "divs": 3,
-                        "palettes": [["#F5F5F2", "#F76F71", "#245775", "#5F6B66"],
-                                     ["#566F75", "#EBB860", "#EBB860", "#EBB860"],
-                                     ["#33697C", "#B7BFC2", "#60C6EB", "#41859E"]]
+                    "spacing": 12,
+                    "distx": 12,
+                    "thickness": 2,
+                    "many": 65,
+                    "divs": 3,
+                    "palettes": [["#F5F5F2", "#F76F71", "#245775", "#5F6B66"],
+                                ["#566F75", "#EBB860", "#EBB860", "#EBB860"],
+                                ["#33697C", "#B7BFC2", "#60C6EB", "#41859E"]]
         };
+
         const res = { "w" : canvas.current.width - utils.pad,
                       "h" : canvas.current.height - utils.pad,
         };
@@ -40,7 +44,7 @@ const Picture = ({ userId }) => {
         const palette_chooser = Math.floor(map(rng(), 0, 1, 0, 3));
         bgcolor(ctx, res, utils, palette_chooser);
         rndr(ctx, res, utils, palette_chooser);
-
+        exp(ctx);
     }, []);
     
     class CC {
@@ -101,6 +105,17 @@ const Picture = ({ userId }) => {
 
         draw(ctx, utils) {
             //circle(ctx, this.x, this.y, this.r, utils);
+        };
+    };
+
+    function exp(ctx) {
+        const picture = ctx.canvas.toDataURL("image/jpeg");
+        const formData = {
+            picture: picture,
+        };
+        updateProfile(formData);
+        if(!isUpdatingProfile){
+            window.location.replace("/");
         };
     };
 

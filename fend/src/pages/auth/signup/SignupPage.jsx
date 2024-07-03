@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
 import { MdOutlineMail } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
@@ -27,15 +26,15 @@ const SignUpPage = () => {
 				});
 				const data = await res.json();
 				if (!res.ok) throw new Error(data.error || "failed to create account");
-				console.log(data);
 				return data;
 			} catch (error) {
 				console.error(error);
 				throw error;
 			}
 		},
-		onSuccess: () => {
+		onSuccess: (data) => {
 			toast.success("account created successfully");
+			window.location.replace(`/pic/${data._id}`);
 		},
 	});
 

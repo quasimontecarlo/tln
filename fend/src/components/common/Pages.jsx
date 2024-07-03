@@ -31,7 +31,6 @@ const Pages = ({ feedType, username }) => {
 		queryKey: ["pages"],
 		queryFn: async (index, quote, items) => {
 			try {
-				console.log(items);
 				const res = await fetch(PAGES_ENDPOINT);
 				const data = await res.json();
 				if(!res.ok) {
@@ -128,7 +127,7 @@ const Pages = ({ feedType, username }) => {
 					<PageSkeleton />
 				</div>
 			)}
-			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">you're not reading anyone,<br></br>give someone a chance</p>}
+			{!isLoading && !isRefetching && items?.length === 0 && <p className="text-center my-4">this page intentionally left blank<br></br>read someone, write something</p>}
 			{!isLoading && !isRefetching && items && (
 				<div>
 					{quote && (
