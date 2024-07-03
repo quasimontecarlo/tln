@@ -2,12 +2,9 @@ import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-
-import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date";
 import Content from "./ReadMore";
 import classNames from "./classNames";
-import Picture from "./Picture";
 
 const Page = ({ page, dotted }) => {
 	//const [comment, setComment] = useState("");
