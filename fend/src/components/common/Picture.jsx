@@ -1,12 +1,17 @@
-import React, { useRef, useEffect, useId } from "react";
+import { useRef, useEffect, useState } from "react";
 import seedrandom from "seedrandom";
-import { isMobile } from "react-device-detect";
+import concaveman from "concaveman";
+import useUpdateUserProfile from "../../hooks/useUpdateProfile";
 
-const Picture = ({ userId }) => {
+const Picture = () => {
+
+    const userId = window.location.href.split("/").pop();
     const rng = seedrandom(userId);
 
     const canvas = useRef();
     let ctx = null;
+    const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
+
 
     useEffect(() => {
         const canvasEle = canvas.current;
@@ -16,15 +21,19 @@ const Picture = ({ userId }) => {
     }, []);
 
     useEffect(() => {
-
         const utils = { "pad": 10,
-                        "spacing": 12,
-                        "distx": 12,
-                        "thickness": 2,
-                        "many": 10,
+                    "spacing": 12,
+                    "distx": 12,
+                    "thickness": 2,
+                    "many": 65,
+                    "divs": 3,
+                    "palettes": [["#F5F5F2", "#F76F71", "#245775", "#5F6B66"],
+                                ["#566F75", "#EBB860", "#EBB860", "#EBB860"],
+                                ["#33697C", "#B7BFC2", "#60C6EB", "#41859E"]]
         };
-        const res = { "w" : canvas.current.width,
-                      "h" : canvas.current.height,
+
+        const res = { "w" : canvas.current.width - utils.pad,
+                      "h" : canvas.current.height - utils.pad,
         };
 
         //ctx.strokeStyle = "#434c5e";
@@ -32,8 +41,10 @@ const Picture = ({ userId }) => {
         //ctx.lineJoin = "round";
         //ctx.lineWidth = 1;
         //render(ctx, res, utils);
-        rndr(ctx, res, utils);
-
+        const palette_chooser = Math.floor(map(rng(), 0, 1, 0, 3));
+        bgcolor(ctx, res, utils, palette_chooser);
+        rndr(ctx, res, utils, palette_chooser);
+        exp(ctx);
     }, []);
     
     class CC {
@@ -45,37 +56,44 @@ const Picture = ({ userId }) => {
             this.plist = [];
         };
 
-        points(ctx, c, utils, allv) {
+        points(ctx, c, res, utils, allv, b1, b2, b3, val) {
             let points = 0;
             if (c.r <= 2) {
-                points = 1;
+                points = 0;
             } else if (c.r <= 5) {
-                points = 4;
+                points = 3;
             } else if (c.r <= 10) {
                 points = 8;
-            } else {
+            } else if (c.r <= 15) {
                 points = 10;
-            }
+            } else {
+                points = 15;
+            };
+
             const arc = Math.PI*2 / points;
             let ang = 0;
             for(let i = 0; i < points; i++) {
                 const x = c.r * Math.cos(ang) + (c.x);
                 const y = c.r * Math.sin(ang) + (c.y);
-                ctx.beginPath();
-                ctx.lineWidth = utils.thickness;
-                ctx.strokeStyle = "red";
-                ctx.arc(x, y, 0.5, 0, 2 * Math.PI);
-                ctx.stroke();
-                ctx.closePath();
+                //ctx.beginPath();
+                //ctx.lineWidth = utils.thickness;
+                //ctx.strokeStyle = "red";
+                //ctx.arc(x, y, 0.5, 0, 2 * Math.PI);
+                //ctx.stroke();
+                //ctx.closePath();
                 this.plist.push(new CC(x, y, 0.5));
-                allv.push({x: x, y: y});
+                //allv.push({x: x, y: y});
+
+                // choice time
+                choice(val, x, y, res, utils, b1, b2, b3);
+
                 ang += arc;
             };
         };
 
         edges(res, utils) {
-            return (this.x + (this.r+(utils.thickness*2)) > res.w || this.x - (this.r+(utils.thickness*2)) < 0 ||
-                this.y + (this.r+(utils.thickness*2)) > res.h || this.y - (this.r+(utils.thickness*2)) < 0)
+            return (this.x + (this.r+(utils.thickness)) > res.w || this.x - (this.r+(utils.thickness)) < utils.pad ||
+                this.y + (this.r+(utils.thickness)) > res.h || this.y - (this.r+(utils.thickness)) < utils.pad)
         };
 
         grow() {
@@ -86,19 +104,34 @@ const Picture = ({ userId }) => {
         
 
         draw(ctx, utils) {
-            circle(ctx, this.x, this.y, this.r, utils);
+            //circle(ctx, this.x, this.y, this.r, utils);
         };
     };
 
-    function rndr(ctx, res, utils) {
+    function exp(ctx) {
+        const picture = ctx.canvas.toDataURL("image/jpeg");
+        const formData = {
+            picture: picture,
+        };
+        updateProfile(formData);
+        if(!isUpdatingProfile){
+            window.location.replace("/");
+        };
+    };
+
+    function rndr(ctx, res, utils, palette_chooser) {
         const clist = [];
         const allv = [];
-        const hullp = [];
+        const b1 = []; 
+        const b2 = [];
+        const b3 = [];
+        const val = Math.floor(map(rng(), 0, 1, 0, 100));
+        //const hullp = [];
 
         const frames = 500;
 
         for (let i = 0; i < utils.many; i++) {
-            makeCircle(clist, res);
+            makeCircle(clist, res, utils);
         };
 
         for (let i = 0; i < frames; i++) {
@@ -123,13 +156,205 @@ const Picture = ({ userId }) => {
             c.draw(ctx, utils);
         });
         clist.forEach(c => {
-            c.points(ctx, c, utils, allv);
+            c.points(ctx, c, res, utils, allv, b1, b2, b3, val);
         });
 
-        quickHull(allv, hullp);
-        const shape = sortPs(hullp);
-        drawBlob(shape, ctx);
+        // using quickHull ref https://www.gorillasun.de/blog/quickhull-algorithm-for-convex-hulls/
+        //quickHull(allv, hullp);
+        //const shape = sortPs(hullp);
+        //drawBlob(shape, ctx);
+
+
+        const blob1 = concaveman(b1, 3, 10);
+        const blob2 = concaveman(b2, 3, 10);
+        const blob3 = concaveman(b3, 3, 10);
+
+        drawBob(blob1, ctx, utils, palette_chooser);
+        drawBob(blob2, ctx, utils, palette_chooser);
+        drawBob(blob3, ctx, utils, palette_chooser);
     };
+
+    function bgcolor(ctx, res, utils, palette_chooser) {
+        ctx.roundRect(0, 0, res.w+utils.pad, res.h+utils.pad, 6);
+        ctx.fillStyle = utils.palettes[palette_chooser][0];
+        ctx.fill();
+    };
+
+    // current approach with caveman
+
+    function choice(val, x, y, res, utils, b1, b2, b3) {
+        let space = 1;
+
+        if (val > 85) {
+            // verticla split
+            if ( x > utils.pad && x < ((res.w/utils.divs)-space)) {
+                return b1.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w) {
+                return b3.push([x,y]);
+            };
+        } else if (val > 70) {
+            // horizontal split
+            if ( y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b1.push([x,y]);
+            } else if (y > ((res.h/utils.divs)+space) && y < ((res.h/utils.divs)*2)-space) {
+                return b2.push([x,y]);
+            } else if (y > (((res.h/utils.divs)*2)+space) && y < res.h) {
+                return b3.push([x,y]);
+            };            
+        } else if (val > 55) {
+            // middle tall up
+            if ( x > utils.pad && x < ((res.w/utils.divs)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < res.w && y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b2.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b3.push([x,y]);
+            };
+        } else if (val > 40) {
+            // middle tall down
+            if ( x > utils.pad && x < ((res.w/utils.divs)-space) && y > utils.pad && y < (((res.h/utils.divs)*2)-space)) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < res.w && y > (((res.h/utils.divs)*2)+space) && y < res.h) {
+                return b2.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > utils.pad && y < (((res.h/utils.divs)*2)-space)) {
+                return b3.push([x,y]);
+            };
+        } else if (val > 25) {
+            // last tall up
+            if ( y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b3.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > utils.pad && y < res.h) {
+                return b3.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b2.push([x,y]);
+            } else if (x > utils.pad && x < ((res.w/utils.divs)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b1.push([x,y]);
+            };
+        } else if (val > 10) {
+            // first tall up
+            if (y > utils.pad && y < ((res.h/utils.divs)-space)) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < ((res.w/utils.divs)-space) && y > utils.pad && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space) && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b2.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > ((res.h/utils.divs)+space) && y < res.h) {
+                return b3.push([x,y]);
+            };
+        } else {
+            // eye
+            if (x > ((res.w/utils.divs)+space) && x < (((res.w/utils.divs)*2)-space) &&  y > ((res.h/utils.divs)+space) && y < (((res.h/utils.divs)*2)-space)) {
+                return b2.push([x,y]);
+            } else if (x > utils.pad && x < ((res.w/utils.divs)-space) && y > utils.pad && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > utils.pad && x < (((res.w/utils.divs)*2)-space) && y > (((res.h/utils.divs)*2)+space) && y < res.h) {
+                return b1.push([x,y]);
+            } else if (x > (((res.w/utils.divs)*2)+space) && x < res.w && y > utils.pad && y < res.h) {
+                return b3.push([x,y]);
+            } else if (x > ((res.w/utils.divs)+space) && x < res.w && y > utils.pad && y < ((res.h/utils.divs)+space)) {
+                return b3.push([x,y]);
+            };
+        };
+    };
+
+    function drawBob(pts, ctx, utils, palette_chooser) {
+        const color_chooser = Math.floor(map(rng(), 0, 1, 1, 4));
+        ctx.beginPath();
+        ctx.fillStyle = utils.palettes[palette_chooser][color_chooser];
+        let offset = 5;
+
+        ctx.moveTo(pts[0][0], pts[0][1]);
+
+        for(let i = 1; i < pts.length; i++) {
+            let distance = dist(pts[0][0], pts[0][1], pts[pts.length-1][0], pts[pts.length-1][1]);
+            if(distance < 10) {
+                offset = 1;
+            } else if(distance > 20) {
+                offset = 10;
+            };
+
+            let midpoint = mid(pts[i-1][0], pts[i-1][1], pts[i][0], pts[i][1]);
+            let midx = midpoint[0] + (map(rng(), 0, 1, -1, 1) * offset * 2);
+            let midy = midpoint[1] + (map(rng(), 0, 1, -1, 1) * offset * 2);
+            ctx.quadraticCurveTo(midx+(map(rng(), 0, 1, -1, 1)*offset), midy+(map(rng(), 0, 1, -1, 1)*offset), pts[i][0], pts[i][1]);
+        }
+
+        //ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+    };
+
+    function drawBobBkp(pts, ctx) {
+        ctx.beginPath();
+        ctx.strokeStyle = "blue";
+        ctx.fillStyle = "black";
+
+        ctx.moveTo(pts[0][0], pts[0][1]);
+        let i = 1;
+        pts.forEach(pt => {
+            ctx.lineTo(pt[0], pt[1]);
+            i++
+        });
+        ctx.lineTo(pts[0][0], pts[0][1]);
+        //ctx.stroke();
+        ctx.fill();
+        ctx.closePath();
+    };
+
+    function makeCircle(clist, res, utils) {
+        
+        // circular random distribution
+        //let r = Math.sqrt(rng());
+        //let theta = rng() * Math.PI*2;
+        //const x = map((r * Math.cos(theta)), -1, 1, utils.pad, res.w);
+        //const y = map((r * Math.sin(theta)), -1, 1, utils.pad, res.h);
+
+        // classing random distribution
+        const x = map(rng(), 0, 1, utils.pad, res.w);
+        const y = map(rng(), 0, 1, utils.pad, res.h);
+
+        let valid = true;
+
+        clist.forEach(c => {
+            const d = dist(x, y, c.x, c.y);
+            if (d < c.r) {
+                valid = false;
+            };
+            });
+        if(valid) {
+            return clist.push(new CC(x, y, 0.1));
+        } else {
+            return null;
+        };
+    };
+
+    function map(value, inMin, inMax, outMin, outMax) {
+        return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+    };
+
+    function dist(x, y, x1, y1) {
+        return Math.sqrt(((x - x1)**2) + ((y - y1)**2));
+    };
+
+    function circle(ctx, x, y, d, utils) {
+        ctx.beginPath();
+        ctx.lineWidth = utils.thickness;
+        ctx.strokeStyle = "green";
+        ctx.arc(x, y, d, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+    };
+    
+    function mid(x, y, x1, y1){
+        return [(x + x1)/2, (y + y1)/2];
+    }
+    // convex hull attempts
 
     function quickHull(allv, hullp){
         allv.sort(function(a,b){return a.x - b.x});
@@ -202,13 +427,14 @@ const Picture = ({ userId }) => {
     function findFurthest(S, line) {
         let maxD = 0
         let idx = -1
+        const concaveRatio = 1.2;
         for (let n = 0; n < S.length; n++) {
           let d = distancePointLine(S[n], line);
-          if (d > maxD) {
+          if (d > (maxD/concaveRatio)) {
             maxD = d
             idx = n
           }
-        }
+        };
       
         return idx
     };
@@ -245,24 +471,6 @@ const Picture = ({ userId }) => {
         return [s1, s2];
     };
 
-    function makeCircle(clist, res) {
-        const x = map(rng(), 0, 1, 0, res.w);
-        const y = map(rng(), 0, 1, 0, res.h);
-        let valid = true;
-
-        clist.forEach(c => {
-            const d = dist(x, y, c.x, c.y);
-            if (d < c.r) {
-                valid = false;
-            };
-            });
-        if(valid) {
-            return clist.push(new CC(x, y, 0.1));
-        } else {
-            return null;
-        };
-    };
-
     function drawBlob(pts, ctx) {
         ctx.beginPath();
         ctx.strokeStyle = "blue";
@@ -275,13 +483,7 @@ const Picture = ({ userId }) => {
         ctx.closePath();
     };
 
-    function map(value, inMin, inMax, outMin, outMax) {
-        return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
-    };
-
-    function dist(x, y, x1, y1) {
-        return Math.sqrt(((x - x1)**2) + ((y - y1)**2));
-    };
+    // previous attempts
 
     function dottedLine(ctx, utils, rowyPos, disty, d, qty, axis, dots) {
         let x = utils.pad;
@@ -329,16 +531,6 @@ const Picture = ({ userId }) => {
 
     function numRows(utils, res) {
         return many(utils.spacing, "y", utils, res);
-    };
-
-
-    function circle(ctx, x, y, d, utils) {
-        ctx.beginPath();
-        ctx.lineWidth = utils.thickness;
-        ctx.strokeStyle = "green";
-        ctx.arc(x, y, d, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.closePath();
     };
 
     function gridMaker(divs) {

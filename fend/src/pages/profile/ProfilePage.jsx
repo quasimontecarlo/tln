@@ -191,7 +191,6 @@ const ProfilePage = () => {
 											)}
 										</div>
 									</div>
-									<Picture userId={user?._id}/>
 								</div>
 							</div>
 							<div className="flex">

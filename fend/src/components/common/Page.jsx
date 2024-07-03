@@ -2,8 +2,6 @@ import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-
-import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date";
 import Content from "./ReadMore";
 import classNames from "./classNames";
@@ -56,7 +54,7 @@ const Page = ({ page, dotted }) => {
 			<div className={classNames("flex gap-2 items-start p-4 ", dotted && "bg-page-pattern bg-[length:8.49px_8.49px]")}>
 				<div className="flex">
 					<Link to={`/profile/${pageOwner.username}`} className="w-8 rounded-md overflow-hidden">
-						<img src={pageOwner.picture || "/avatar-placeholder.png"} />
+						<img src={pageOwner.picture || "/avatar-placeholder.png"}/>
 					</Link>
 				</div>
 				<div className="flex flex-col flex-1 mt-0.5">
