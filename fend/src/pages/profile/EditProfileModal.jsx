@@ -5,7 +5,6 @@ const EditProfileModal = ({ authUser }) => {
 	const [formData, setFormData] = useState(
 		{
 		username: "",
-		email: "",
 		about: "",
 		link: "",
 		newPassword: "",
@@ -24,7 +23,6 @@ const EditProfileModal = ({ authUser }) => {
 		if (authUser) {
 			setFormData({
 				username: authUser.username,
-				email: authUser.email,
 				about: authUser.about,
 				link: authUser.link,
 				newPassword: "",
@@ -62,14 +60,6 @@ const EditProfileModal = ({ authUser }) => {
 							/>
 						</div>
 						<div className="flex flex-wrap gap-2 caret-base-content ">
-							<input
-								type="email"
-								placeholder="email"
-								className="flex-1 input border border-primary border-dotted rounded p-2 input-md placeholder-secondary"
-								value={formData.email}
-								name="email"
-								onChange={handleInputChange}
-							/>
 							<textarea
 								placeholder="about"
 								className="flex-1 input border border-primary border-dotted rounded p-2 input-md placeholder-secondary scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-primary scrollbar-track-base-100"

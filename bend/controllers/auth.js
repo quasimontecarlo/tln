@@ -7,21 +7,11 @@ import {v2 as cloudinary } from "cloudinary";
 
 export const signup = async (req, res) => {
     try {
-        const {username, email, password} = req.body;
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ error: "invalid email format" });
-        }        
+        const {username, password} = req.body;
 
         const existingUser = await User.findOne({ username });
         if(existingUser){
             return res.status(400).json({ error: "username is taken"});
-        }
-
-        const existingEmail = await User.findOne({ email });
-        if(existingEmail){
-            return res.status(400).json({ error: "email is registered"});
         }
 
         if(password.length < 6) {
@@ -33,7 +23,6 @@ export const signup = async (req, res) => {
 
         const newUser = new User({
             username,
-            email,
             password:hashedPassword,
         })
 
@@ -44,7 +33,6 @@ export const signup = async (req, res) => {
             res.status(201).json({ 
                 _id: newUser._id,
                 username: newUser.username,
-                email: newUser.email,
                 readers: newUser.readers,
                 reading: newUser.reading,
                 picture: newUser.picture,
@@ -75,7 +63,6 @@ export const login = async (req, res) => {
 		res.status(200).json({
 			_id: user._id,
 			username: user.username,
-			email: user.email,
 			//readers: user.readers,
 			//reading: user.reading,
 			picture: user.picture,
@@ -110,25 +97,42 @@ export const getMe = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
+        // delete user pages
         const pages = await Page.find({user: req.user._id});
-        console.log(pages);
-
-        for(let pgId in pages) {
-            if(pages[pgId].img) {
-                const imgId = pages[pgId].img.split("/").pop().split(".")[0];
-                await cloudinary.uploader.destroy(imgId);
+        if (pages) {
+            for(let pgId in pages) {
+                if(pages[pgId].img) {
+                    const imgId = pages[pgId].img.split("/").pop().split(".")[0];
+                    await cloudinary.uploader.destroy(imgId);
+                };
+                await Page.findByIdAndDelete(pages[pgId]._id);
             };
-            await Page.findByIdAndDelete(pages[pgId]._id);
         };
-
+        // delete user from other's reading list
+        const readers = await User.find({reading: req.user._id});
+        if(readers) {
+            for(let reader in readers) {
+                await User.findByIdAndUpdate(readers[reader]._id, { $pull: { reading: req.user._id} });
+            };
+        };
+        // delete user from other's readers list
+        const readings = await User.find({readers: req.user._id});
+        if(readings) {
+            for(let reading in readings) {
+                await User.findByIdAndUpdate(readings[reading]._id, { $pull: { readers: req.user._id} });
+            };
+        };
+        // delete user picture
         const user = await User.findById(req.user._id);
         if(user.picture) {
             const imgId = user.picture.split("/").pop().split(".")[0];
             await cloudinary.uploader.destroy(imgId);
         };
-        
+        // delete user
         await User.findByIdAndDelete(req.user._id);
+        res.cookie("jwt", "", {maxAge:0});
         res.status(200).json("user deleted");
+
     } catch (error) {
         console.log( "error in deleteUser controller", error.message );
         res.status(500).json({ error: "internal server error "+ error.message});

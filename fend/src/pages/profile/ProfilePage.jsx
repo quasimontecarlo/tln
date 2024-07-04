@@ -16,7 +16,6 @@ import classNames from "../../components/common/classNames";
 import readUser from "../../hooks/readUser";
 import useUpdateUserProfile from "../../hooks/useUpdateProfile";
 import Banner from "../../components/common/Banner";
-import Picture from "../../components/common/Picture";
 
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../../components/common/cropImage";

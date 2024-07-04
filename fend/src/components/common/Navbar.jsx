@@ -3,12 +3,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import classNames from "./classNames";
 import { isMobile } from "react-device-detect";
+import DeleteUserModal from "../../pages/profile/DeleteUserModal";
 
 
 const Navbar = () => {
 
 	const queryClient = useQueryClient();
     let location = useLocation();
+    const { data } = useQuery({queryKey: ["authUser"]});
 
 	const { mutate:logout } = useMutation({
 		mutationFn: async() => {
@@ -33,8 +35,6 @@ const Navbar = () => {
 			toast.error("logout failed");
 		},
 	});
-
-	const { data } = useQuery({queryKey: ["authUser"]});
 
     function isMatchingLocation(url) {
         if(url === location.pathname)
@@ -105,6 +105,7 @@ const Navbar = () => {
                     </div>
                     <ul tabIndex={0} className="z-[1] shadow-l bg-base-100 menu items-end menu-sm rounded-md dropdown-content w-auto">
                         {/*<li><a>Settings</a></li>*/}
+                        <DeleteUserModal authUser= { data }/>
                         <li><a
                         className="hover:bg-base-100 focus:bg-base-100"
                         onClick={(e) => {

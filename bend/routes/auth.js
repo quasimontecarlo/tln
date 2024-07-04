@@ -8,6 +8,6 @@ router.get("/me", protectRoute, getMe);
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
-router.delete("/delete/:id", protectRoute, deleteUser);
+router.delete("/delete", protectRoute, deleteUser);
 
 export default router;

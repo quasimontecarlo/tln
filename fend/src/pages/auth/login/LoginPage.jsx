@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FaUser } from "react-icons/fa";
 
 
 const LoginPage = () => {
@@ -58,7 +56,7 @@ const LoginPage = () => {
 					<p className="w-24 lg:hidden fill-white">thelonelynetwork</p>
 					<h1 className="text-4xl font-extrabold text-white">{"Let's"} go.</h1>
 					<label className="input input-bordered rounded flex items-center gap-2">
-						<MdOutlineMail />
+						<FaUser />
 						<input
 							type="text"
 							className="grow"

@@ -142,7 +142,7 @@ export const getAllPages = async (req, res) => {
     try {
         const pages = await Page.find({latest: true}).sort({ createAt: -1 }).populate({
             path: "user",
-            select: "-password -readers -reading -email -createdAt -updatedAt"
+            select: "-password -readers -reading -createdAt -updatedAt"
         });
 
         if(pages.length === 0) {
@@ -161,7 +161,7 @@ export const getMyPages = async (req, res) => {
         const many = 10;
         const pages = await Page.find({  user: req.params.id, latest: true }).sort({ createdAt: -1 }).populate({
             path: "user",
-            select: "-password -readers -reading -email -createdAt -updatedAt"
+            select: "-password -readers -reading -createdAt -updatedAt"
         }).lean().limit(many).skip(i * many);
 
         if(pages.length === 0) {
@@ -178,11 +178,11 @@ export const getRandomPages = async (req, res) => {
     try {
 
         let i = req.query.index ? Number(req.query.index) : 0;// starts form 0
-        const many = 10;
+        const many = 1000;
         const userId = req.user.id;
         const pages = await Page.find({latest: true, user:{$ne: userId}}).sort({ updatedAt: -1 }).populate({
             path: "user",
-            select: "-password -readers -reading -email -createdAt -updatedAt"
+            select: "-password -readers -reading -createdAt -updatedAt"
         }).lean().limit(many).skip(i * many);
         if(pages.length === 0) {
             return res.status(200).json([])
@@ -209,7 +209,7 @@ export const getReadingPages = async (req, res) => {
         const reading = user.reading;
         const readingPages = await Page.find({ user: { $in: reading }, latest: true}).sort({ createdAt: -1 }).populate({
             path: "user",
-            select: "-password -readers -reading -email -createdAt -updatedAt"
+            select: "-password -readers -reading -createdAt -updatedAt"
         }).lean().limit(many).skip(i * many);
         res.status(200).json(readingPages);
     } catch(error) {
@@ -227,7 +227,7 @@ export const getUserPages = async (req, res) => {
         if(!user) return res.status(404).json({ error: "user not found" });
         const pages = await Page.find({ user: user._id, latest: true }).sort({ createdAt: -1}).populate({
             path: "user",
-            select: "-password -readers -reading -email -createdAt -updatedAt"
+            select: "-password -readers -reading -createdAt -updatedAt"
         }).lean().limit(many).skip(i * many);
         if(pages.length === 0) {
             return res.status(200).json([])

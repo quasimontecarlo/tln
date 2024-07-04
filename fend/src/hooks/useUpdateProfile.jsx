@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 
 const useUpdateUserProfile = () => {
 
-
     const queryClient = useQueryClient();
     const { mutateAsync: updateProfile, isPending: isUpdatingProfile } = useMutation({
         mutationFn: async (formData) => {
@@ -25,11 +24,13 @@ const useUpdateUserProfile = () => {
                 throw new Error(error.message);
             }
         },
-        onSuccess: async () => {
+        onSuccess: () => {
             toast.success("profile updated successfully");
-            await queryClient.invalidateQueries({ queryKey: ["authUser"] })
-            await queryClient.invalidateQueries({ queryKey: ["userProfile"] })
-            await queryClient.invalidateQueries({ queryKey: ["pages"] })
+            Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+                queryClient.invalidateQueries({ queryKey: ["userProfile"] }),
+                queryClient.invalidateQueries({ queryKey: ["pages"] }),
+            ]);
         },
         onError: (error) => {
             toast.error(error.message);

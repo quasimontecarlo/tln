@@ -5,7 +5,7 @@ import User from "../models/user.js";
 export const getUserProfile = async (req, res) => {
     const { username } = req.params;
     try {
-        const user = await User.findOne({username}).select("-password -reading -readers -email");
+        const user = await User.findOne({username}).select("-password -reading -readers");
         if (!user) {
             return res.status(404).json({error: "user not found"});
         }
@@ -49,7 +49,7 @@ export const readUnreadUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    const {username, email, currentPassword, newPassword, about, link} = req.body;
+    const {username, currentPassword, newPassword, about, link} = req.body;
     let {picture, banner} = req.body;
 
     const userId = req.user._id;
@@ -91,7 +91,6 @@ export const updateUser = async (req, res) => {
 		}
 
         user.username = username || user.username;
-        user.email = email || user.email;
         user.about = about || user.about;
         user.link = link || user.link;
         user.picture = picture || user.picture;

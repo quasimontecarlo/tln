@@ -27,7 +27,7 @@ const Pages = ({ feedType, username }) => {
 
 	const PAGES_ENDPOINT = getPageEndpoint(index);
 	
-	const { data , isLoading, isRefetching, refetch } = useQuery({
+	const { data , isLoading, isRefetching } = useQuery({
 		queryKey: ["pages"],
 		queryFn: async (index, quote, items) => {
 			try {
@@ -61,15 +61,16 @@ const Pages = ({ feedType, username }) => {
 		const temp = [...items];
 		const updatedData = await res.json();
 		let appended = []
-
-		if(feedType === "random"){
-			appended = temp.concat(shuffle(updatedData));
-		} else {
-			appended = temp.concat(updatedData);
-		}
-		setItems(appended);
-		setIndex( prevIndex => prevIndex + 1);
-	}
+		if (updatedData > 0) {
+			if(feedType === "random"){
+				appended = temp.concat(shuffle(updatedData));
+			} else {
+				appended = temp.concat(updatedData);
+			}
+			setItems(appended);
+			setIndex( prevIndex => prevIndex + 1);
+		};
+	};
 
 	function shuffle(pages) {
 		return [...pages].sort(() => 0.5 - Math.random());
@@ -79,8 +80,10 @@ const Pages = ({ feedType, username }) => {
 		const quotes = [];
 		const min_len = 25;
 		const max_len = 85;
-		data.forEach(item => item.text.length >= min_len && item.text.length <= max_len && quotes.push(item));
-		return quotes;
+		if(data) {
+			data.forEach(item => item.text.length >= min_len && item.text.length <= max_len && quotes.push(item));
+			return quotes;
+		};
 	};
 
 	const observerTarget = useRef(null);
@@ -105,7 +108,7 @@ const Pages = ({ feedType, username }) => {
 				observer.unobserve(observerTarget.current);
 			}
 		};
-	}, [observerTarget, feedType, username, refetch, index]);
+	}, [observerTarget, feedType, username, index]);
 
 	
 	function isEven(n) {
