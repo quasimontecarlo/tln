@@ -90,7 +90,7 @@ export const getMe = async (req, res) => {
         const user = await User.findById(req.user._id).select("-password -readers");
         res.status(200).json(user);
     } catch (error) {
-        console.log( "erro' in getme controller", error.message );
+        console.log( "error in getme controller", error.message );
         res.status(500).json({ error: "internal server error"});
     }
 };

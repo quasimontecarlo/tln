@@ -49,6 +49,7 @@ const EditProfileModal = ({ authUser }) => {
 							updateProfile(formData);
 						}}
 					>
+						{/*
 						<div className="flex flex-wrap gap-2 caret-base-content">
 							<input
 								type="text"
@@ -59,6 +60,7 @@ const EditProfileModal = ({ authUser }) => {
 								onChange={handleInputChange}
 							/>
 						</div>
+						*/}
 						<div className="flex flex-wrap gap-2 caret-base-content ">
 							<textarea
 								placeholder="about"
@@ -96,7 +98,7 @@ const EditProfileModal = ({ authUser }) => {
 								onChange={handleInputChange}
 							/>
 						</div>
-						<button onClick={() => {window.location.href=`/profile/${formData.username}`}} className="justify-end btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-info hover:bg-base-100 pe-0">
+						<button className="justify-end btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-info hover:bg-base-100 pe-0">
 							update
 						</button>
 					</form>
