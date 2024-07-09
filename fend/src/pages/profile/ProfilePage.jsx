@@ -152,6 +152,7 @@ const ProfilePage = () => {
 								{/* PICTURE MODAL */}
 								<dialog id="crop_picture_modal" className="modal">
 									<div className="modal-box border rounded-md border-primary shadow-md w-2/3">
+										<h3 className="font-m1m-mid text-secondary text-start text-lg mb-3">-·-·-·-</h3>
 										<div className="crop-container relative w-full h-96">
 											<Cropper
 												image={picture}

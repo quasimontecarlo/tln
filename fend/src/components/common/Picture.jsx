@@ -114,9 +114,6 @@ const Picture = () => {
             picture: picture,
         };
         updateProfile(formData);
-        if(!isUpdatingProfile){
-            window.location.replace("/");
-        };
     };
 
     function rndr(ctx, res, utils, palette_chooser) {
