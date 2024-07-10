@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import Pages from "../../components/common/Pages";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
@@ -27,6 +27,8 @@ const ProfilePage = () => {
 
 	const bannerRef = useRef(null);
 	const pictureRef = useRef(null);
+
+	const navigate = useNavigate();
 
 	const { username } = useParams();
 
@@ -241,7 +243,7 @@ const ProfilePage = () => {
 												await updateProfile({ banner, picture });
 												setProfileImg(null);
 												setCoverImg(null);
-												{window.location.href=`/profile/${user?.username}`}
+												navigate(0);
 											}}
 										>
 											{isUpdatingProfile ? "updating..." : "update"}

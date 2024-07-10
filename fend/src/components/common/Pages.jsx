@@ -29,7 +29,7 @@ const Pages = ({ feedType, username }) => {
 	
 	const { data , isLoading, isRefetching } = useQuery({
 		queryKey: ["pages"],
-		queryFn: async (index, quote, items) => {
+		queryFn: async () => {
 			try {
 				const res = await fetch(PAGES_ENDPOINT);
 				const data = await res.json();

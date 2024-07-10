@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import classNames from "./classNames";
@@ -10,6 +10,8 @@ const Navbar = () => {
 
 	const queryClient = useQueryClient();
     let location = useLocation();
+    const navigate = useNavigate();
+
     const { data } = useQuery({queryKey: ["authUser"]});
 
 	const { mutate:logout } = useMutation({
@@ -85,7 +87,7 @@ const Navbar = () => {
             <div className="flex-auto justify-end">
                 {data && (
 					<Link
-                        onClick={() => {window.location.href=pp}}
+                        to= {pp}
 						className="mt-auto mb-auto flex transition-all duration-100"
 					>
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-square avatar hover:bg-base-100">

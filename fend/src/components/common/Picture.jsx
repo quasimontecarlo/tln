@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import seedrandom from "seedrandom";
 import concaveman from "concaveman";
 import useUpdateUserProfile from "../../hooks/useUpdateProfile";
+import { useNavigate } from "react-router-dom";
 
 const Picture = () => {
 
@@ -11,7 +12,7 @@ const Picture = () => {
     const canvas = useRef();
     let ctx = null;
     const { isUpdatingProfile, updateProfile } = useUpdateUserProfile();
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         const canvasEle = canvas.current;
@@ -114,6 +115,9 @@ const Picture = () => {
             picture: picture,
         };
         updateProfile(formData);
+        if(!isUpdatingProfile){
+            navigate("/");
+        };
     };
 
     function rndr(ctx, res, utils, palette_chooser) {

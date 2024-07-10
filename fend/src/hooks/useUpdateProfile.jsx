@@ -6,6 +6,7 @@ const useUpdateUserProfile = () => {
 
     const queryClient = useQueryClient();
 
+
     const { mutateAsync: updateProfile, isPending: isUpdatingProfile } = useMutation({
         mutationFn: async (formData) => {
             try {

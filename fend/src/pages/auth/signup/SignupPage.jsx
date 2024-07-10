@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
-import { MdDriveFileRenameOutline } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -11,6 +10,8 @@ const SignUpPage = () => {
 		username: "",
 		password: "",
 	});
+
+	const navigate = useNavigate();
 
 	const { mutate, isError, isPending, error } = useMutation({
 		mutationFn: async ({ username, password }) => {
@@ -32,7 +33,7 @@ const SignUpPage = () => {
 		},
 		onSuccess: (data) => {
 			toast.success("account created successfully");
-			window.location.replace(`/pic/${data._id}`);
+			navigate(`/pic/${data._id}`);
 		},
 	});
 
@@ -46,50 +47,61 @@ const SignUpPage = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
+
 	return (
-		<div className="max-w-screen-xl mx-auto flex h-screen px-10">
-			<div className="flex-1 hidden lg:flex items-center  justify-center">
-        		<p className=' lg:w-2/3 fill-white'>thelonelynetwork</p>
-			</div>
-			<div className="flex-1 flex flex-col justify-center items-center">
-				<form className="lg:w-2/3  mx-auto md:mx-20 flex gap-4 flex-col" onSubmit={handleSubmit}>
-					<p className='w-24 lg:hidden fill-white'>thelonelynetwork</p>
-					<h1 className="text-4xl font-extrabold text-primary-content">join today__</h1>
-					<div className="flex gap-4 flex-wrap">
-						<label className="input input-bordered rounded flex items-center gap-2 flex-1">
+		<div className="max-w-screen-xl mx-auto h-screen content-center grid grid-cols-1">
+			<div className="flex flex-col justify-center items-center">
+				<form className="flex gap-4 flex-col" onSubmit={handleSubmit}>
+					<h1 className="text-4xl text-center font-m1m text-primary-content mb-2">-·- join -·-</h1>
+					<details className="collapse collapse-plus">
+  						<summary className="collapse-title text-info">before signing up, read here</summary>
+ 						<div className="collapse-content">
+							<p>this is a passion project ...</p>
+							<p>... done by a clueless newbie</p>
+							<p>use a password manager as you ...</p>
+							<p className="text-warning">... can't recover your password</p>
+							<p>feed me only fake information ...</p>
+							<p>... you are willing to loose</p>
+							<br></br>
+							<p className="text-success">by signing up ...</p>
+							<p className="text-success">... you agree to all these terms</p>
+ 						</div>
+					</details>
+					<div className="flex gap-4 flex-wrap caret-base-content">
+						<label className="flex flex-1 items-center gap-2 input border border-primary border-dotted rounded placeholder-secondary">
 							<FaUser />
 							<input
 								type="text"
 								className="grow "
-								placeholder="Username"
+								placeholder="username"
 								name="username"
 								onChange={handleInputChange}
 								value={formData.username}
 							/>
 						</label>
 					</div>
-					<label className="input input-bordered rounded flex items-center gap-2">
+					<label className="flex items-center gap-2 input border border-primary border-dotted rounded placeholder-secondary">
 						<MdPassword />
 						<input
 							type="password"
 							className="grow"
-							placeholder="Password"
+							placeholder="password"
 							name="password"
 							onChange={handleInputChange}
 							value={formData.password}
 						/>
 					</label>
-					<button className='btn rounded-full btn-primary text-white'>
-						{isPending ? "Loading..." : "Sign up"}
+					{isError && <p className='justify-start text-error'>{error.message}</p>}
+					<button className='justify-end btn btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-secondary-content text-lg hover:bg-base-100 pe-0'>
+						{isPending ? "loading..." : "sign up"}
 					</button>
-					{isError && <p className='text-red-500'>{error.message}</p>}
 				</form>
-				<div className="flex flex-col lg:w-2/3 gap-2 mt-4">
-					<p className="text-primary-content text-lg">have an account?</p>
-					<Link to="/login">
-						<button className="btn btn-outline w-full">sign in</button>
-					</Link>
-				</div>
+			</div>
+			<div className="flex-1 flex flex-col mt-6">
+				<p className="justify-start">already have an account ?</p>
+				<Link className="" to="/login">
+					<button className="justify-end btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-primary-content text-md hover:bg-base-100 p-0">log in</button>
+				</Link>
 			</div>
 		</div>
 	);

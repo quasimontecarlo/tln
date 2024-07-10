@@ -61,7 +61,7 @@ const EditProfileModal = ({ authUser }) => {
 							/>
 						</div>
 						*/}
-						<div className="flex flex-wrap gap-2 caret-base-content ">
+						<div className="flex flex-wrap gap-2 caret-base-content">
 							<textarea
 								placeholder="about"
 								className="flex-1 input border border-primary border-dotted rounded p-2 input-md placeholder-secondary scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-primary scrollbar-track-base-100"
