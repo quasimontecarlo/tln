@@ -97,7 +97,7 @@ const Navbar = () => {
                         </div>
                     </Link>
                     )}
-                <div className="dropdown dropdown-end">
+                <div className={classNames("dropdown", !isMobile ? "dropdown-end" : "dropdown-top dropdown-left")}>
                     <div tabIndex={0} className="flex">
                         <button className="btn btn-ghost hover:bg-base-100 justify-end ps-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
@@ -105,7 +105,7 @@ const Navbar = () => {
                             </svg>
                       </button>
                     </div>
-                    <ul tabIndex={0} className="z-[1] shadow-l bg-base-100 menu items-end menu-sm rounded-md dropdown-content w-auto">
+                    <ul tabIndex={0} className={classNames("z-[1] shadow-l bg-base-100 menu items-end menu-sm rounded-md dropdown-content w-auto", isMobile && "translate-x-8")}>
                         {/*<li><a>Settings</a></li>*/}
                         <DeleteUserModal authUser= { data }/>
                         <li><a

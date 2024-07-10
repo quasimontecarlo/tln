@@ -72,7 +72,7 @@ const SignUpPage = () => {
 							<FaUser />
 							<input
 								type="text"
-								className="grow "
+								className="grow"
 								placeholder="username"
 								name="username"
 								onChange={handleInputChange}
@@ -91,16 +91,16 @@ const SignUpPage = () => {
 							value={formData.password}
 						/>
 					</label>
-					{isError && <p className='justify-start text-error'>{error.message}</p>}
-					<button className='justify-end btn btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-secondary-content text-lg hover:bg-base-100 pe-0'>
+					{isError && <p className="justify-start text-error">{error.message}</p>}
+					<button className="justify-end btn btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-secondary-content text-lg hover:bg-base-100 pe-0">
 						{isPending ? "loading..." : "sign up"}
 					</button>
 				</form>
 			</div>
 			<div className="flex-1 flex flex-col mt-6">
-				<p className="justify-start">already have an account ?</p>
+				<p className="justify-start">have an account ?</p>
 				<Link className="" to="/login">
-					<button className="justify-end btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-primary-content text-md hover:bg-base-100 p-0">log in</button>
+					<button className="btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-primary-content text-md hover:bg-base-100 p-0">log in</button>
 				</Link>
 			</div>
 		</div>

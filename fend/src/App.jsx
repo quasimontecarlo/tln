@@ -10,6 +10,7 @@ import LoadingSpinner from "./components/common/LoadingSpinner";
 import Picture from "./components/common/Picture";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
+import { isMobile } from "react-device-detect";
 
 
 function App() {
@@ -54,7 +55,43 @@ function App() {
 					<Route path="/reading" element={authUser ? <ReadingPage /> : <Navigate to="/login" />} />
 					<Route path="/pic/:_id" element={<Picture />}/>
 				</Routes>
-				<Toaster />
+				{isMobile ?
+				<Toaster
+				toastOptions={{
+					className: "bg-base-100 text-base-content",
+					success: {
+						iconTheme: {
+							primary: "#a3be8c",
+							secondary: "#2e3440"
+						},
+					},
+					error: {
+						iconTheme: {
+							primary: "#bf616a",
+							secondary: "#2e3440",
+						},
+					},
+				}} />
+				: 
+				 <Toaster
+				 containerStyle={{
+					 top: 57,
+				 }}
+				 toastOptions={{
+					 className: "bg-base-100 text-base-content",
+					 success: {
+						 iconTheme: {
+							 primary: "#a3be8c",
+							 secondary: "#2e3440"
+						 },
+					 },
+					 error: {
+						 iconTheme: {
+							 primary: "#bf616a",
+							 secondary: "#2e3440",
+						 },
+					 },
+				 }} />}
 			</div>
 		</div>
 	);
