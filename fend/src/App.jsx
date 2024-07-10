@@ -8,6 +8,7 @@ import WritePage from "./pages/home/WritePage";
 import ReadingPage from "./pages/home/ReadingPage";
 import LoadingSpinner from "./components/common/LoadingSpinner";
 import Picture from "./components/common/Picture";
+import AboutPage from "./pages/home/AboutPage";
 import { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { isMobile } from "react-device-detect";
@@ -53,7 +54,8 @@ function App() {
 					<Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
 					<Route path="/write" element={authUser ? <WritePage /> : <Navigate to="/login" />} />
 					<Route path="/reading" element={authUser ? <ReadingPage /> : <Navigate to="/login" />} />
-					<Route path="/pic/:_id" element={<Picture />}/>
+					<Route path="/pic/:_id" element={<Picture />} />
+					<Route path="/about" element={authUser ? <AboutPage /> : <Navigate to="/login" />} />
 				</Routes>
 				{isMobile ?
 				<Toaster

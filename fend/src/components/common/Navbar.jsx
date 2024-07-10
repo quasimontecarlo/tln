@@ -106,7 +106,11 @@ const Navbar = () => {
                       </button>
                     </div>
                     <ul tabIndex={0} className={classNames("z-[1] shadow-l bg-base-100 menu items-end menu-sm rounded-md dropdown-content w-auto", isMobile && "translate-x-8")}>
-                        {/*<li><a>Settings</a></li>*/}
+                        <li><Link
+                                to= {"/about"}
+                                className="hover:bg-base-100 focus:bg-base-100">
+                                credits
+                        </Link></li>
                         <DeleteUserModal authUser= { data }/>
                         <li><a
                         className="hover:bg-base-100 focus:bg-base-100"
