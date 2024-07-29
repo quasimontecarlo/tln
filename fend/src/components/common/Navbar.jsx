@@ -52,8 +52,8 @@ const Navbar = () => {
     const pp = `/profile/${data?.username}`;
 
 	return (
-		<div className={classNames("navbar bg-base-100 max-w-6xl p-0 flex fixed z-10", isMobile && "bottom-0" || "top-0")}>
-            <div className="flex-auto p-0 justify-start btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
+		<div className={classNames("navbar flex justify-between bg-base-100 max-w-6xl p-0 fixed z-10", isMobile && "bottom-0" || "top-0")}>
+            <div className="btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
                 <Link to={`/`} className="flex text-xl">
                     <p className="hidden md:block">the</p>
                     <p className="hidden md:block text-base-200">lonely</p>
@@ -63,28 +63,28 @@ const Navbar = () => {
                     <p className="md:hidden">n</p>
                 </Link>
             </div>
-            <div role="tablist" className="flex-auto tabs tabs-bordered">
+            <div role="tablist" className="tabs tabs-bordered">
                 <Link to={write}
                 role="tab"
-                className={classNames("tab", isMatchingLocation(write) && "tab-active")}
+                className={classNames("tab w-28", isMatchingLocation(write) && "tab-active")}
                 >
                     write
                 </Link>
                 <Link to={home}
                 role="tab"
-                className={classNames("tab", isMatchingLocation(home) && "tab-active")}
+                className={classNames("tab w-28", isMatchingLocation(home) && "tab-active")}
                 >
                     discovery
                 </Link>
                 <Link to={reading}
                 role="tab"
-                className={classNames("tab", isMatchingLocation(reading) && "tab-active")}
+                className={classNames("tab w-28", isMatchingLocation(reading) && "tab-active")}
                 >
                     reading
                 </Link>
             </div>
 
-            <div className="flex-auto justify-end">
+            <div className="">
                 {data && (
 					<Link
                         to= {pp}

@@ -14,10 +14,6 @@ const Banner = ({ userId }) => {
     const rng = seedrandom(userId);
     const noise3D = createNoise3D(pnrg);
 
-    const randArray = (arr) => {
-        return arr[Math.floor(pnrg() * arr.length)];
-    };
-
 
     useEffect(() => {
         const canvasEle = canvas.current;
@@ -34,20 +30,15 @@ const Banner = ({ userId }) => {
 
     useEffect(() => {
         const utils = { "margin": 0,
-            "len": 30,
-            "cellSize": 20,
-            // new implementation
-            "maxscale": 0.001,
-            "minscale": 0.00004,
-            "maxspace": 30,
-            "minspace": 1,
-            "maxBiglinesize": 80,
-            "maxSmalllinesize": 2,
-            "minSmalllinesize": 1,
-            "maxBiglines": 5,
-            "maxMidlines": 20,
-            "maxSmalllines": 85,
-            "csize": 5,
+                        "maxscale": 0.001,
+                        "minscale": 0.00004,
+                        "maxspace": 50,
+                        "minspace": 2,
+                        "maxSmalllinesize": 3,
+                        "minSmalllinesize": 1,
+                        "maxSmalllines": 85,
+                        "csize": 4,
+                        "palette": ["#3b4252", "#434c5e", "#4c566a"],
         };
     
         const res = { "w" : canvas.current.width,
@@ -67,8 +58,14 @@ const Banner = ({ userId }) => {
         const noiseScale = pnrg() * (utils.maxscale - utils.minscale) + utils.minscale;
         const cols = Math.ceil(res.w / utils.csize);
         const rows = Math.ceil(res.h / utils.csize);
+
         const grid = [... new Array(cols * rows)].map(() => []);
         const activeList = [];
+
+        const randArray = (arr) => {
+            return arr[Math.floor(pnrg() * arr.length)];
+        };
+
         const distance = ([x1, y1], [x2, y2]) => Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 
         const vectorAtPoint = ([x, y], cartesian = true) => {
@@ -204,7 +201,7 @@ const Banner = ({ userId }) => {
                     drawFlowLine(line[line.length - 1], lineSize, direction, line, splines);
                 } else {
                     ctx.lineWidth = utils.csize * lineSize;
-                    ctx.strokeStyle = "#434c5e";
+                    ctx.strokeStyle = randArray(utils.palette);
                     ctx.beginPath();
                     ctx.moveTo(...line[0]);
                     for (let i = 1; i < line.length; i++) {
@@ -231,24 +228,11 @@ const Banner = ({ userId }) => {
 
         //run
 
-        const BIGLINESIZE = pnrg() * utils.maxBiglinesize;
-        // draw big lines
-        /*
-        for (let i = 0; i < pnrg() * utils.maxBiglines; i++) {
-            drawFlowLine(randomPointInRect(), BIGLINESIZE);
-        }
-        for (let i = 0; i < pnrg() * utils.maxMidlines; i++) {
-            drawFlowLine(randomPointInRect(), BIGLINESIZE / 3);
-        }
-        for (let i = 0; i < pnrg() * utils.maxSmalllines; i++) {
-            drawFlowLine(randomPointInRect(), BIGLINESIZE / 6);
-        }
-        */
         for (let i = 0; i < utils.maxSmalllines; i++) {
             const SMALLLINESIZE = Math.round(pnrg() * (utils.maxSmalllinesize - utils.minSmalllinesize) + utils.minSmalllinesize);
 
             drawFlowLines(randomPointInRect(), SMALLLINESIZE);
-        }
+        };
 
     };
 

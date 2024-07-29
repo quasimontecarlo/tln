@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import WelcomePage from "./pages/welcome/WelcomePage";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/auth/login/LoginPage";
 import SignupPage from "./pages/auth/signup/SignupPage";
@@ -48,14 +49,15 @@ function App() {
 			<div className="flex">
 
 				<Routes>
-					<Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
+					<Route path="/welcome" element={!authUser ? <WelcomePage /> : <Navigate to="/" />} />
+					<Route path="/" element={authUser ? <HomePage /> : <Navigate to="/welcome" />} />
 					<Route path="/signup" element={!authUser ? <SignupPage /> : <Navigate to="/" />} />
 					<Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
-					<Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
-					<Route path="/write" element={authUser ? <WritePage /> : <Navigate to="/login" />} />
-					<Route path="/reading" element={authUser ? <ReadingPage /> : <Navigate to="/login" />} />
+					<Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to="/welcome" />} />
+					<Route path="/write" element={authUser ? <WritePage /> : <Navigate to="/welcome" />} />
+					<Route path="/reading" element={authUser ? <ReadingPage /> : <Navigate to="/welcome" />} />
 					<Route path="/pic/:_id" element={<Picture />} />
-					<Route path="/about" element={authUser ? <AboutPage /> : <Navigate to="/login" />} />
+					<Route path="/about" element={authUser ? <AboutPage /> : <Navigate to="/welcome" />} />
 				</Routes>
 				{isMobile ?
 				<Toaster

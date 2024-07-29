@@ -186,7 +186,7 @@ const ProfilePage = () => {
 										<div className="relative -top-[calc(8rem-8px)] -right-[calc(7rem-8px)] cursor-pointer">
 											{isMyProfile && (
 												<MdEdit
-													className="w-4 h-4 text-base-100"
+													className="w-4 h-4 mix-blend-hard-light text-base-100"
 													onClick={() => pictureRef.current.click()}
 												/>
 											)}
