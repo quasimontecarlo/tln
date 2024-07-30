@@ -4,8 +4,9 @@
   "description": "thelonelynetwork",
   "main": "bend/server.js",
   "scripts": {
-    "dev": "nodemon bend/server.js",
-    "start": "node bend/server.js"
+    "dev": "NODE_ENV=development nodemon bend/server.js",
+    "start": "NODE_ENV=production node bend/server.js",
+    "build": "npm install && npm install --prefix fend && npm run build --prefix fend"
   },
   "keywords": [],
   "author": "",
