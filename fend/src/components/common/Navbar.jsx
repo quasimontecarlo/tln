@@ -58,27 +58,26 @@ const Navbar = () => {
                     <p className="hidden md:block">the</p>
                     <p className="hidden md:block text-base-200">lonely</p>
                     <p className="hidden md:block">network</p>
-                    <p className="md:hidden">t</p>
-                    <p className="md:hidden text-base-200">l</p>
-                    <p className="md:hidden">n</p>
+                    <p className="md:hidden">&gt;</p>
+                    <p className="md:hidden text-base-200">_</p>
                 </Link>
             </div>
             <div role="tablist" className="tabs tabs-bordered">
                 <Link to={write}
                 role="tab"
-                className={classNames("tab w-28", isMatchingLocation(write) && "tab-active")}
+                className={classNames(classNames("tab", isMatchingLocation(write) && "tab-active"), !isMobile && "w-28")}
                 >
                     write
                 </Link>
                 <Link to={home}
                 role="tab"
-                className={classNames("tab w-28", isMatchingLocation(home) && "tab-active")}
+                className={classNames(classNames("tab", isMatchingLocation(write) && "tab-active"), !isMobile && "w-28")}
                 >
                     discovery
                 </Link>
                 <Link to={reading}
                 role="tab"
-                className={classNames("tab w-28", isMatchingLocation(reading) && "tab-active")}
+                className={classNames(classNames("tab", isMatchingLocation(write) && "tab-active"), !isMobile && "w-28")}
                 >
                     reading
                 </Link>
