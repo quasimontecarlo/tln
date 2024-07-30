@@ -17,7 +17,7 @@ const WelcomePage = () => {
                         </button>
                     </Link>
                 </div>
-                <div className="bg-page-pattern bg-[length:8.49px_8.49px] flex justify-between">
+                <div className="bg-page-pattern bg-[length:8.49px_8.49px] lg:flex justify-between">
                     <div className="p-4 self-center">
                         <p>&gt;_</p>
                         <p>the text based anti social network</p>
@@ -25,23 +25,23 @@ const WelcomePage = () => {
                         <p>can interfere with your will to express</p>
                         <p>yourself</p>
                     </div>
-                    <div className="p-4 self-center text-end font-m1m_mid text-9xl tracking-wide">
-                        <p className="translate-y-5">the</p>
+                    <div className="p-4 self-center text-end font-m1m_mid text-7xl lg:text-9xl tracking-wide">
+                        <p className="translate-y-3 lg:translate-y-5">the</p>
                         <div className="pt-0 flex text-base-200">
                             <p className="grow translate-x-2">lone</p>
                             <p className="flex tracking-tighter">ly</p>
                         </div>
-                        <div className="flex pe-7 -translate-y-5">
-                        <p className="-translate-x-2">ne</p>
-                        <p className="-translate-x-2">t</p>
-                        <p className="-translate-x-1">w</p>
-                        <p className="">ork</p>
+                        <div className="pe-4 lg:pe-7 flex justify-end -translate-y-2 lg:-translate-y-5">
+							<p className="-translate-x-2">ne</p>
+							<p className="-translate-x-2">t</p>
+							<p className="-translate-x-1">w</p>
+							<p className="">ork</p>
                         </div>
                     </div>
                 </div>
                 <div>
                     <br></br>
-                    <h1 className="text-center text-5xl font-m1m_thin">wait -- what ?</h1>
+                    <h1 className="text-center text-4xl lg:text-5xl font-m1m_thin">wait -- what ?</h1>
                     <br></br>
                     <p>no one knows if someone is reading what they write</p>
                     <p>no one can comment on anything that was written</p>
