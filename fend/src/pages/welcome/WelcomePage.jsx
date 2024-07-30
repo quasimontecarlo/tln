@@ -4,7 +4,7 @@ const WelcomePage = () => {
 	
 	return (
 		<>
-			<div className="flex-1 h-[calc(100vh-154px)]">
+			<div className="flex-[4_4_0] w-full">
                 <div className="h-16 flex justify-evenly content-center">
                     <Link to="/login" className="self-center">
                         <button className="btn btn-primary font-normal font-m1m_mid underline underline-offset-2 btn-ghost btn-sm text-info text-md hover:bg-base-100">
