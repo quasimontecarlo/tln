@@ -128,21 +128,6 @@ const ProfilePage = () => {
 							{/* COVER IMG */}
 							<div className="group/cover h-72">
 								<Banner userId={user?._id}/>
-								{/*isMyProfile && (
-									<div
-										className="relative -top-[calc(14rem-25px)] -right-[calc(100%-30px)] cursor-pointer"
-										onClick={() => bannerRef.current.click()}
-									>
-										<MdEdit className="w-5 h-5 text-base-100" />
-									</div>
-								)*/}
-								<input
-									type="file"
-									hidden
-                                    accept="image/*"
-									ref={bannerRef}
-									onChange={(e) => handleImgChange(e, "banner")}
-								/>
 								<input
 									type="file"
 									hidden

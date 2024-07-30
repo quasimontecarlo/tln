@@ -50,7 +50,7 @@ const LoginPage = () => {
 		<div className="max-w-screen-xl mx-auto h-screen content-center grid grid-cols-1">
 			<div className="flex flex-col justify-center items-center">
 				<form className="flex gap-4 flex-col" onSubmit={handleSubmit}>
-					<h1 className="text-4xl text-center font-m1m text-primary-content mb-2">-| you're back |-</h1>
+					<h1 className="text-2xl md:text-4xl text-center font-m1m text-primary-content mb-2">-| you're back |-</h1>
 					<label className="flex input border border-primary border-dotted rounded items-center gap-2 placeholder-secondary caret-base-content">
 						<FaUser />
 						<input

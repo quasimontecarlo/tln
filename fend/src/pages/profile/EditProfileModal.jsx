@@ -34,7 +34,7 @@ const EditProfileModal = ({ authUser }) => {
 	return (
 		<>
 			<button
-				className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0"
+				className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100"
 				onClick={() => document.getElementById("edit_profile_modal").showModal()}
 			>
 				edit

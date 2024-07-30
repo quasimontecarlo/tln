@@ -5,7 +5,7 @@ const AboutPage = () => {
 	
 	return (
 		<>
-			<div className={classNames("flex-[4_4_0]", isMobile && "mb-16" || "mt-16")}>
+	        <div className={classNames("flex-[4_4_0]", isMobile && "mb-16" || "mt-16")}>
 
 		        <div className="h-[calc(100vh-154px)] content-center grid">
                     <p>thelonelynetwork is a product of dissatisfaction with social media</p>

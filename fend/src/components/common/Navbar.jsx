@@ -54,12 +54,12 @@ const Navbar = () => {
 	return (
 		<div className={classNames("navbar flex justify-between bg-base-100 max-w-6xl p-0 fixed z-10", isMobile && "bottom-0" || "top-0")}>
             <div className="btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
-                <Link to={`/`} className="flex text-xl">
+                <Link to={`/`} className="flex text-xl pe-1">
                     <p className="hidden md:block">the</p>
                     <p className="hidden md:block text-base-200">lonely</p>
                     <p className="hidden md:block">network</p>
-                    <p className="md:hidden">&gt;</p>
-                    <p className="md:hidden text-base-200">_</p>
+                    <p className="md:hidden text-base-200">&gt;</p>
+                    <p className="md:hidden">_</p>
                 </Link>
             </div>
             <div role="tablist" className="tabs tabs-bordered">
@@ -71,13 +71,13 @@ const Navbar = () => {
                 </Link>
                 <Link to={home}
                 role="tab"
-                className={classNames(classNames("tab", isMatchingLocation(write) && "tab-active"), !isMobile && "w-28")}
+                className={classNames(classNames("tab", isMatchingLocation(home) && "tab-active"), !isMobile && "w-28")}
                 >
                     discovery
                 </Link>
                 <Link to={reading}
                 role="tab"
-                className={classNames(classNames("tab", isMatchingLocation(write) && "tab-active"), !isMobile && "w-28")}
+                className={classNames(classNames("tab", isMatchingLocation(reading) && "tab-active"), !isMobile && "w-28")}
                 >
                     reading
                 </Link>
