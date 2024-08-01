@@ -43,31 +43,31 @@ const WelcomePage = () => {
                     <br></br>
                     <h1 className="text-center text-4xl lg:text-5xl font-m1m_thin">wait -- what ?</h1>
                     <br></br>
-                    <p>no one knows if someone is reading what they write</p>
-                    <p>no one can comment on anything that was written</p>
-                    <p className="font-m1m_mid">no comments, advertisements, AI, judgement nor censorship</p>
-                    <p>you might be the most read loner in the platform</p>
-                    <p>and no one will ever know</p>
+                    <p>is anyone reading?</p>
+                    <p className="font-m1m_mid">no comments, likes, advertisements, AI, judgement nor censorship</p>
+                    <p>you might be the most read in the platform</p>
+                    <p>... no one will ever know</p>
                     <div className="text-right">
-                        <p>sign up to join, and you'll gain your personal account</p>
-                        <p>remember to be anonymous and use a password manager</p>
+                        <p>sign up to join,<br></br>you'll gain your personal account</p>
+                        <p>be anonymous and use a password manager</p>
                         <p>as you can't get your password back once lost</p>
-                        <br></br>
-                        <p>with your account you'll get a generative profile picture and banner</p>
-                        <p>then you can start writing</p>
+                        <p className="font-m1m_thin">~·~·~</p>
+                        <p>once joined,</p>
                         <p>you'll be greated by three sections</p>
                         <p>write -|- discovery -|- reading</p>
-                        <p>plus of course your profile page</p>
-                        <br></br>
-                        <p>in write you write your article, no distractions</p>
-                        <p>in discovery you will get a most recent, randomly served, set of articles</p>
+                        <p>and your profile page, of course</p>
+                        <p className="font-m1m_thin">~·~·~</p>
+                        <p>in write you write your articles,<br></br>no distractions</p>
+                        <p>in discovery you will get the most recent,<br></br>randomly served, set of articles</p>
                         <p>no silly AI algo that tailors your needs</p>
-                        <p>just pure randomization, like mother nature intended</p>
-                        <p>in reading you get who, you decided, was worth to keep reading</p>
+                        <p>just pure randomization,<br></br>like mother nature intended</p>
+                        <p>in reading you get who, you decided,<br></br> was worth to keep reading</p>
+                        <p className="font-m1m_thin">~·~·~</p>
                         <p>now here comes the quirky side</p>
-                        <br></br>
                         <p>when you're reading someone, only you will know, they won't</p>
-                        <p>don't cheer so quickly, the same goes for you</p>
+                        <p>don't cheer too quickly, the same goes for you</p>
+						<p className="font-m1m_thin">~·~·~</p>
+						<br></br>
                     </div>
                 </div>
 			</div>

@@ -30,7 +30,9 @@ const Picture = () => {
                     "divs": 3,
                     "palettes": [["#F5F5F2", "#F76F71", "#245775", "#5F6B66"],
                                 ["#566F75", "#EBB860", "#EBB860", "#EBB860"],
-                                ["#33697C", "#B7BFC2", "#60C6EB", "#41859E"]]
+                                ["#33697C", "#B7BFC2", "#60C6EB", "#41859E"],
+                                ["#23193F", "#D1292F", "#E0AC86", "#E07A31"],
+                                ["#F9F8F4", "#F9EFDB", "#99755B", "#999999"]]
         };
 
         const res = { "w" : canvas.current.width - utils.pad,
