@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { isMobile } from "react-device-detect";
+import classNames from "./classNames";
+
 
 const Write = () => {
 	const [text, setText] = useState("");
@@ -54,7 +57,7 @@ const Write = () => {
 
 	return (
 		<div className="flex p-4 items-start gap-4 border-secondary">
-			<form className="flex flex-col gap-2 h-full w-full" onSubmit={handleSubmit}>
+			<form className={classNames("flex flex-col gap-2 w-full", isMobile && "h-[calc(100vh-154px)]")} onSubmit={handleSubmit}>
 				<textarea autoFocus
 			className="textarea w-full h-[calc(100vh-154px)] p-0 caret-base-content text-lg resize-none border-none focus:outline-none placeholder-secondary"
 					placeholder={pt}

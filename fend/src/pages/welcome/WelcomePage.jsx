@@ -64,8 +64,8 @@ const WelcomePage = () => {
                         <p>in reading you get who, you decided,<br></br> was worth to keep reading</p>
                         <p className="font-m1m_thin">~·~·~</p>
                         <p>now here comes the quirky side</p>
-                        <p>when you're reading someone, only you will know, they won't</p>
-                        <p>don't cheer too quickly, the same goes for you</p>
+                        <p>when you're reading someone,<br></br> only you will know, they won't</p>
+                        <p>don't cheer too quickly,<br></br> the same goes for you</p>
 						<p className="font-m1m_thin">~·~·~</p>
 						<br></br>
                     </div>
