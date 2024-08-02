@@ -52,7 +52,8 @@ const Navbar = () => {
     const pp = `/profile/${data?.username}`;
 
 	return (
-		<div className={classNames("navbar flex justify-between bg-base-100 max-w-6xl p-0 fixed z-10", isMobile && "bottom-0" || "top-0")}>
+        <div className="fixed w-full">
+		<div className={classNames("navbar max-w-[1095px] mx-auto justify-between bg-base-100 z-10", isMobile && "bottom-0" || "top-0")}>
             <div className="btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
                 <Link to={`/`} className="flex text-xl pe-1">
                     <p className="hidden md:block">the</p>
@@ -98,7 +99,7 @@ const Navbar = () => {
                     )}
                 <div className={classNames("dropdown", !isMobile ? "dropdown-end" : "dropdown-top dropdown-left")}>
                     <div tabIndex={0} className="flex">
-                        <button className="btn btn-ghost hover:bg-base-100 justify-end ps-1">
+                        <button className="btn btn-ghost hover:bg-base-100 ps-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
                             </svg>
@@ -120,6 +121,7 @@ const Navbar = () => {
                     </ul>
                 </div>
             </div>
+        </div>
         </div>
 	);
 };

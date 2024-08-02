@@ -44,9 +44,9 @@ function App() {
 	}
 
 	return (
-		<div className="max-w-6xl mx-auto px-2 md:px-6 lg:px-10">
+		<div className="">
 			{authUser && <Navbar />}
-			<div className="flex">
+			<div className="flex max-w-6xl mx-auto px-2 md:px-6 lg:px-10">
 
 				<Routes>
 					<Route path="/welcome" element={!authUser ? <WelcomePage /> : <Navigate to="/" />} />

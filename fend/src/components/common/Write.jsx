@@ -64,7 +64,7 @@ const Write = () => {
 					value={text}
 					onChange={(e) => setText(e.target.value)}
 				/>
-				<div className="flex justify-end border-t py-2 border-secondary">
+				<div className={classNames("flex justify-end py-2 border-secondary", !isMobile && "border-t")}>
 					<button className="btn btn-primary font-normal font-m1m_bold underline underline-offset-2 btn-ghost btn-sm text-secondary-content hover:bg-base-100 pe-0">
 						{isPending ? "publishing..." : "publish"}
 					</button>
