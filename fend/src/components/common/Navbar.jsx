@@ -52,8 +52,8 @@ const Navbar = () => {
     const pp = `/profile/${data?.username}`;
 
 	return (
-        <div className="fixed w-full">
-		<div className={classNames("navbar max-w-[1095px] mx-auto justify-between bg-base-100 z-10", isMobile && "bottom-0" || "top-0")}>
+        <div className={classNames("fixed w-full", isMobile && "bottom-0" || "top-0")}>
+		<div className="navbar max-w-[1095px] mx-auto justify-between bg-base-100 z-10">
             <div className="btn btn-ghost font-m1m_mid font-normal hover:bg-base-100">
                 <Link to={`/`} className="flex text-xl pe-1">
                     <p className="hidden md:block">the</p>
