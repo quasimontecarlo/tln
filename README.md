@@ -1,7 +1,9 @@
 # tln
 thelonelynetwork
 the text based anti social network repo
-all you see here in main get's automatically deployed
+all you see here in main is automatically deployed
+
+this is the product of a newbie, take all you see with this in mind :)
 
 TO-DO:
 
