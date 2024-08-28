@@ -8,7 +8,7 @@ import EditProfileModal from "./EditProfileModal";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/date";
 import { isMobile } from "react-device-detect";
 import classNames from "../../components/common/classNames";
@@ -22,13 +22,13 @@ import getCroppedImg from "../../components/common/cropImage";
 
 const ProfilePage = () => {
 
+	const navigate = useNavigate();
+	
 	const [banner, setCoverImg] = useState(null);
 	const [picture, setProfileImg] = useState(null);
 
 	const bannerRef = useRef(null);
 	const pictureRef = useRef(null);
-
-	const navigate = useNavigate();
 
 	const { username } = useParams();
 
@@ -167,7 +167,7 @@ const ProfilePage = () => {
 								{/* USER AVATAR */}
 								<div className="relative z-0 bottom-20 left-4">
 									<div className="w-32">
-									<img className="rounded-md" src={picture || user?.picture || "/avatar-placeholder.png"} />
+									<img className="rounded-md z-0" src={picture || user?.picture || "/avatar-placeholder.png"} />
 										<div className="relative -top-[calc(8rem-8px)] -right-[calc(7rem-8px)] cursor-pointer">
 											{isMyProfile && (
 												<MdEdit
